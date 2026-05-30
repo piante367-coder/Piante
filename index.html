@@ -279,6 +279,110 @@
   .btn-drive-logout:hover { background: var(--gray-200); }
   .drive-hint { font-size: 12px; color: var(--gray-400); text-align: center; margin-top: 4px; line-height: 1.5; }
   .drive-sep { height: 1px; background: var(--gray-100); margin: 4px 0; }
+
+  /* HEATMAP */
+  .heatmap-wrap {
+    margin-bottom: 11px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .heatmap-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: fit-content;
+  }
+  .heatmap-months {
+    display: flex;
+    gap: 2px;
+    padding-left: 24px;
+    margin-bottom: 2px;
+    height: 14px;
+  }
+  .heatmap-month-label {
+    font-size: 10px;
+    color: var(--gray-400);
+    white-space: nowrap;
+    line-height: 14px;
+    position: absolute;
+  }
+  .heatmap-rows {
+    display: flex;
+    gap: 2px;
+  }
+  .heatmap-day-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+  .heatmap-day-label {
+    font-size: 9px;
+    color: var(--gray-400);
+    height: 10px;
+    line-height: 10px;
+    width: 18px;
+    text-align: right;
+  }
+  .heatmap-cols {
+    display: flex;
+    gap: 2px;
+  }
+  .heatmap-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .heatmap-cell {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background: var(--gray-100);
+    cursor: default;
+    flex-shrink: 0;
+    position: relative;
+    transition: transform 0.1s;
+  }
+  .heatmap-cell:hover { transform: scale(1.3); z-index: 2; }
+  .heatmap-cell.today { box-shadow: 0 0 0 1.5px var(--green-400); }
+  .heatmap-cell.lvl-1 { background: #c6e09e; }
+  .heatmap-cell.lvl-2 { background: #7eba42; }
+  .heatmap-cell.lvl-3 { background: #3d7a1a; }
+  .heatmap-cell.future { background: transparent; }
+  .heatmap-footer {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: flex-end;
+    padding-top: 4px;
+    font-size: 10px;
+    color: var(--gray-400);
+  }
+  .heatmap-legend-cell {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    background: var(--gray-100);
+  }
+  .heatmap-legend-cell.lvl-1 { background: #c6e09e; }
+  .heatmap-legend-cell.lvl-2 { background: #7eba42; }
+  .heatmap-legend-cell.lvl-3 { background: #3d7a1a; }
+
+  /* Tooltip */
+  .hm-tooltip {
+    position: fixed;
+    background: var(--gray-800);
+    color: #fff;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 200;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.1s;
+  }
+  .hm-tooltip.show { opacity: 1; }
 </style>
 </head>
 <body>
@@ -342,6 +446,10 @@
         <option value="30">Una volta al mese</option>
       </select>
     </div>
+    <div class="form-group" id="form-group-last-watered">
+      <label>Ultima innaffiatura (opzionale)</label>
+      <input type="date" id="inp-last-watered">
+    </div>
     <div class="modal-actions">
       <button class="btn-cancel-modal" onclick="closeModal()">Annulla</button>
       <button class="btn-save-modal" onclick="savePlant()">Salva</button>
@@ -358,6 +466,7 @@
 </div>
 
 <div class="toast" id="toast"><span id="toast-msg"></span></div>
+<div class="hm-tooltip" id="hm-tooltip"></div>
 
 <script>
 const CLIENT_ID = '595278972600-5nh69ar36qse8puiqghieu5561ult80b.apps.googleusercontent.com';
@@ -460,7 +569,7 @@ function render() {
         <span class="status-badge ${st.badge}">${st.label}</span>
       </div>
       <div class="progress-wrap"><div class="progress-bar ${pr.cls}" style="width:${pr.pct}%"></div></div>
-      ${history ? `<div class="history-chips">${history}</div>` : ''}
+      ${buildHeatmap(p)}
       <button class="btn-water${p.lastWatered && daysSince(p.lastWatered)===0?' watered':''}" onclick="waterPlant('${p.id}')">
         💧 ${p.lastWatered && daysSince(p.lastWatered)===0 ? 'Innaffiata oggi ✓' : 'Innaffia ora'}
       </button>
@@ -508,6 +617,7 @@ function openModal(id) {
   selectedEmoji = '🪴';
   document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
   document.querySelector('.emoji-btn[data-emoji="🪴"]').classList.add('selected');
+  const lastWateredGroup = document.getElementById('form-group-last-watered');
   if (id) {
     const p = plants.find(x => x.id === id);
     document.getElementById('modal-title').textContent = 'Modifica pianta';
@@ -517,11 +627,14 @@ function openModal(id) {
     selectedEmoji = p.emoji || '🪴';
     const eb = document.querySelector(`.emoji-btn[data-emoji="${selectedEmoji}"]`);
     if (eb) eb.classList.add('selected');
+    lastWateredGroup.style.display = 'none'; // hide when editing
   } else {
     document.getElementById('modal-title').textContent = 'Nuova pianta';
     document.getElementById('inp-name').value = '';
     document.getElementById('inp-species').value = '';
     document.getElementById('inp-freq').value = '3';
+    document.getElementById('inp-last-watered').value = '';
+    lastWateredGroup.style.display = '';
   }
   document.getElementById('overlay').classList.add('open');
   setTimeout(() => document.getElementById('inp-name').focus(), 100);
@@ -537,12 +650,152 @@ function savePlant() {
     const p = plants.find(x => x.id === editingId);
     p.name = name; p.species = species; p.freq = freq; p.emoji = selectedEmoji;
   } else {
-    plants.push({ id: uid(), name, species, freq, emoji: selectedEmoji, lastWatered: null, history: [] });
+    const lastWateredVal = document.getElementById('inp-last-watered').value;
+    let lastWatered = null;
+    let history = [];
+    if (lastWateredVal) {
+      // Create ISO string at noon to avoid timezone issues
+      lastWatered = new Date(lastWateredVal + 'T12:00:00').toISOString();
+      history = [lastWatered];
+    }
+    plants.push({ id: uid(), name, species, freq, emoji: selectedEmoji, lastWatered, history });
   }
   save(); closeModal(); render();
 }
 
-// --- Toast ---
+// --- Heatmap ---
+function buildHeatmap(plant) {
+  const WEEKS = 18; // ~4 months
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Build a Set of watered dates (YYYY-MM-DD)
+  const wateredDates = new Set();
+  const allEntries = [...(plant.history || [])];
+  if (plant.lastWatered && !allEntries.includes(plant.lastWatered)) allEntries.push(plant.lastWatered);
+  allEntries.forEach(iso => {
+    const d = new Date(iso); d.setHours(0,0,0,0);
+    wateredDates.add(d.toISOString().slice(0,10));
+  });
+
+  // Start from WEEKS*7 days ago, aligned to Monday
+  const startDate = new Date(today);
+  startDate.setDate(startDate.getDate() - (WEEKS * 7 - 1));
+  // Align to Monday
+  const dow = startDate.getDay(); // 0=Sun
+  const offset = dow === 0 ? -6 : 1 - dow;
+  startDate.setDate(startDate.getDate() + offset);
+
+  // Build columns (weeks), each with 7 days (Mon-Sun)
+  const cols = [];
+  let cur = new Date(startDate);
+  for (let w = 0; w < WEEKS; w++) {
+    const col = [];
+    for (let d = 0; d < 7; d++) {
+      col.push(new Date(cur));
+      cur.setDate(cur.getDate() + 1);
+    }
+    cols.push(col);
+  }
+
+  // Month labels
+  const monthNames = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+  const dayNames = ['L','M','M','G','V','S','D'];
+
+  // Determine level: 3 = today or yesterday, 2 = within last week, 1 = older
+  function getLevel(date) {
+    const key = date.toISOString().slice(0,10);
+    if (!wateredDates.has(key)) return 0;
+    const diffDays = Math.floor((today - date) / 86400000);
+    if (diffDays <= 1) return 3;
+    if (diffDays <= 7) return 2;
+    return 1;
+  }
+
+  // Month label positions
+  let monthLabels = [];
+  cols.forEach((col, wi) => {
+    const firstDay = col[0];
+    if (wi === 0 || firstDay.getDate() <= 7) {
+      monthLabels.push({ wi, label: monthNames[firstDay.getMonth()] });
+    }
+  });
+  // Deduplicate same month
+  monthLabels = monthLabels.filter((m, i) => i === 0 || m.label !== monthLabels[i-1].label);
+
+  // Build HTML
+  const CELL = 10, GAP = 2;
+  const colWidth = CELL + GAP;
+
+  // Month row (relative positioning)
+  let monthRowHtml = `<div class="heatmap-months" style="position:relative;height:14px;padding-left:22px;">`;
+  monthLabels.forEach(({ wi, label }) => {
+    const left = 22 + wi * colWidth;
+    monthRowHtml += `<span class="heatmap-month-label" style="left:${left}px">${label}</span>`;
+  });
+  monthRowHtml += '</div>';
+
+  // Cells grid
+  let colsHtml = cols.map(col => {
+    const cells = col.map(date => {
+      const isFuture = date > today;
+      if (isFuture) return `<div class="heatmap-cell future"></div>`;
+      const key = date.toISOString().slice(0,10);
+      const isToday = date.getTime() === today.getTime();
+      const lvl = getLevel(date);
+      const cls = [
+        'heatmap-cell',
+        lvl > 0 ? `lvl-${lvl}` : '',
+        isToday ? 'today' : ''
+      ].filter(Boolean).join(' ');
+      const label = date.toLocaleDateString('it-IT', {day:'numeric', month:'short', year:'numeric'});
+      const watered = wateredDates.has(key);
+      return `<div class="${cls}" data-date="${key}" data-label="${label}" data-watered="${watered}" onmouseenter="showHmTip(this,event)" onmouseleave="hideHmTip()" ontouchstart="showHmTip(this,event)" ontouchend="hideHmTip()"></div>`;
+    }).join('');
+    return `<div class="heatmap-col">${cells}</div>`;
+  }).join('');
+
+  const rowsHtml = `<div class="heatmap-rows">
+    <div class="heatmap-day-labels">
+      ${dayNames.map((d,i) => `<div class="heatmap-day-label">${i % 2 === 0 ? d : ''}</div>`).join('')}
+    </div>
+    <div class="heatmap-cols">${colsHtml}</div>
+  </div>`;
+
+  const footer = `<div class="heatmap-footer">
+    meno
+    <div class="heatmap-legend-cell"></div>
+    <div class="heatmap-legend-cell lvl-1"></div>
+    <div class="heatmap-legend-cell lvl-2"></div>
+    <div class="heatmap-legend-cell lvl-3"></div>
+    più
+  </div>`;
+
+  return `<div class="heatmap-wrap"><div class="heatmap-inner">${monthRowHtml}${rowsHtml}${footer}</div></div>`;
+}
+
+function showHmTip(el, e) {
+  const tip = document.getElementById('hm-tooltip');
+  const watered = el.dataset.watered === 'true';
+  tip.textContent = watered ? `💧 ${el.dataset.label}` : el.dataset.label;
+  tip.classList.add('show');
+  positionTip(e);
+}
+function hideHmTip() {
+  document.getElementById('hm-tooltip').classList.remove('show');
+}
+function positionTip(e) {
+  const tip = document.getElementById('hm-tooltip');
+  const x = (e.touches ? e.touches[0].clientX : e.clientX);
+  const y = (e.touches ? e.touches[0].clientY : e.clientY);
+  tip.style.left = (x - tip.offsetWidth/2) + 'px';
+  tip.style.top = (y - 32) + 'px';
+}
+document.addEventListener('mousemove', e => {
+  const tip = document.getElementById('hm-tooltip');
+  if (tip.classList.contains('show')) positionTip(e);
+});
+
+
 let toastTimer = null;
 function showToast(msg, undoFn) {
   const t = document.getElementById('toast');
