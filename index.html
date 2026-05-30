@@ -153,8 +153,9 @@
     display: flex; align-items: center; gap: 3px;
   }
 
+  .btn-action-row { display: flex; gap: 8px; }
   .btn-water {
-    width: 100%; padding: 10px;
+    flex: 1; padding: 10px;
     background: var(--green-50); border: 1.5px solid var(--green-200);
     border-radius: var(--radius-md); color: var(--green-800);
     font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
@@ -163,6 +164,16 @@
   }
   .btn-water:active { background: var(--green-100); transform: scale(0.98); }
   .btn-water.watered { background: var(--green-100); border-color: var(--green-400); }
+  .btn-fertilize {
+    flex: 1; padding: 10px;
+    background: #fff5f5; border: 1.5px solid var(--red-200);
+    border-radius: var(--radius-md); color: var(--red-600);
+    font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-fertilize:active { background: #ffe0e0; transform: scale(0.98); }
+  .btn-fertilize.fertilized { background: #ffe0e0; border-color: var(--red-600); }
 
   .empty-state { text-align: center; padding: 4rem 2rem; color: var(--gray-400); }
   .empty-icon { font-size: 64px; margin-bottom: 1rem; display: block; }
@@ -175,6 +186,7 @@
     background: rgba(30,50,10,0.35); backdrop-filter: blur(3px);
     align-items: flex-end; justify-content: center;
     padding-bottom: env(safe-area-inset-bottom, 0);
+    overflow-y: auto;
   }
   .overlay.open { display: flex; }
   .modal {
@@ -182,6 +194,11 @@
     padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0));
     width: 100%; max-width: 480px;
     box-shadow: var(--shadow-modal); animation: slideUp 0.22s ease-out;
+    max-height: 92dvh; overflow-y: auto;
+  }
+  @media (min-height: 700px) {
+    .overlay { align-items: center; }
+    .modal { border-radius: var(--radius-lg); max-height: 88dvh; }
   }
   @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   .modal-handle { width: 36px; height: 4px; background: var(--gray-200); border-radius: 99px; margin: 0 auto 1.25rem; }
@@ -280,109 +297,94 @@
   .drive-hint { font-size: 12px; color: var(--gray-400); text-align: center; margin-top: 4px; line-height: 1.5; }
   .drive-sep { height: 1px; background: var(--gray-100); margin: 4px 0; }
 
-  /* HEATMAP */
-  .heatmap-wrap {
-    margin-bottom: 11px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  /* HEATMAP TOGGLE */
+  .heatmap-toggle-btn {
+    width: 100%; background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 0 6px; font-size: 12px; font-weight: 500;
+    color: var(--gray-400); font-family: 'DM Sans', sans-serif;
+    margin-bottom: 0;
   }
-  .heatmap-inner {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: fit-content;
+  .heatmap-toggle-btn:hover { color: var(--gray-600); }
+  .heatmap-toggle-arrow {
+    font-size: 10px; transition: transform 0.25s;
+    display: inline-block;
   }
-  .heatmap-months {
-    display: flex;
-    gap: 2px;
-    padding-left: 24px;
-    margin-bottom: 2px;
-    height: 14px;
+  .heatmap-toggle-arrow.open { transform: rotate(180deg); }
+
+  /* HEATMAP PANEL */
+  .heatmap-panel {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.32s ease, opacity 0.25s ease;
+    opacity: 0;
   }
-  .heatmap-month-label {
-    font-size: 10px;
-    color: var(--gray-400);
-    white-space: nowrap;
-    line-height: 14px;
-    position: absolute;
+  .heatmap-panel.open {
+    max-height: 700px;
+    opacity: 1;
   }
-  .heatmap-rows {
-    display: flex;
-    gap: 2px;
+  .heatmap-panel-inner { padding-bottom: 10px; }
+
+  /* NAV */
+  .heatmap-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
   }
-  .heatmap-day-labels {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin-right: 4px;
-    flex-shrink: 0;
+  .heatmap-nav-btn {
+    background: none; border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm); padding: 3px 10px;
+    font-size: 16px; cursor: pointer; color: var(--gray-600);
+    line-height: 1.4; transition: background 0.1s;
+    font-family: 'DM Sans', sans-serif;
   }
-  .heatmap-day-label {
-    font-size: 9px;
-    color: var(--gray-400);
-    height: 10px;
-    line-height: 10px;
-    width: 18px;
-    text-align: right;
+  .heatmap-nav-btn:hover { background: var(--gray-100); }
+  .heatmap-nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .heatmap-month-title {
+    font-size: 13px; font-weight: 500; color: var(--gray-700);
+    text-transform: capitalize;
   }
-  .heatmap-cols {
-    display: flex;
-    gap: 2px;
+
+  /* GRID */
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
   }
-  .heatmap-col {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+  .heatmap-day-head {
+    font-size: 9px; color: var(--gray-400);
+    text-align: center; padding-bottom: 2px;
   }
   .heatmap-cell {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
+    aspect-ratio: 1;
+    border-radius: 3px;
     background: var(--gray-100);
-    cursor: default;
-    flex-shrink: 0;
     position: relative;
+    min-width: 0;
     transition: transform 0.1s;
   }
-  .heatmap-cell:hover { transform: scale(1.3); z-index: 2; }
-  .heatmap-cell.today { box-shadow: 0 0 0 1.5px var(--green-400); }
-  .heatmap-cell.lvl-1 { background: #c6e09e; }
-  .heatmap-cell.lvl-2 { background: #7eba42; }
-  .heatmap-cell.lvl-3 { background: #3d7a1a; }
-  .heatmap-cell.future { background: transparent; }
-  .heatmap-footer {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    justify-content: flex-end;
-    padding-top: 4px;
-    font-size: 10px;
-    color: var(--gray-400);
+  .heatmap-cell.empty { background: transparent; pointer-events: none; }
+  .heatmap-cell.future { background: var(--gray-50); opacity: 0.4; pointer-events: none; }
+  .heatmap-cell.watered { background: var(--green-400); }
+  .heatmap-cell.fertilized { background: var(--red-200); }
+  .heatmap-cell.today { box-shadow: 0 0 0 1.5px var(--green-600); }
+  .heatmap-cell.today.watered { background: var(--green-600); }
+  .heatmap-cell.today.fertilized { background: var(--red-600); box-shadow: 0 0 0 1.5px var(--red-600); }
+  .heatmap-cell.editable { cursor: pointer; }
+  .heatmap-cell.editable:active { transform: scale(0.88); }
+  .heatmap-cell-num {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; color: var(--gray-400); pointer-events: none;
   }
-  .heatmap-legend-cell {
-    width: 10px; height: 10px;
-    border-radius: 2px;
-    background: var(--gray-100);
-  }
-  .heatmap-legend-cell.lvl-1 { background: #c6e09e; }
-  .heatmap-legend-cell.lvl-2 { background: #7eba42; }
-  .heatmap-legend-cell.lvl-3 { background: #3d7a1a; }
+  .heatmap-cell.watered .heatmap-cell-num,
+  .heatmap-cell.fertilized .heatmap-cell-num { color: rgba(255,255,255,0.85); }
+  .heatmap-cell.today:not(.watered):not(.fertilized) .heatmap-cell-num { color: var(--green-600); font-weight: 600; }
 
-  /* Tooltip */
-  .hm-tooltip {
-    position: fixed;
-    background: var(--gray-800);
-    color: #fff;
-    font-size: 11px;
-    padding: 4px 8px;
-    border-radius: 6px;
-    pointer-events: none;
-    z-index: 200;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.1s;
-  }
-  .hm-tooltip.show { opacity: 1; }
+  /* History section in edit modal */
+  .history-edit-wrap { margin-top: 0.25rem; }
+  .history-edit-label { font-size: 13px; color: var(--gray-600); font-weight: 500; margin-bottom: 6px; display: block; }
+  .heatmap-edit-hint { font-size: 11px; color: var(--gray-400); margin-top: 5px; text-align: center; }
+
 </style>
 </head>
 <body>
@@ -450,6 +452,16 @@
       <label>Ultima innaffiatura (opzionale)</label>
       <input type="date" id="inp-last-watered">
     </div>
+    <div class="history-edit-wrap" id="history-edit-section" style="display:none">
+      <span class="history-edit-label">Storico innaffiature — tocca un giorno per aggiungerlo/rimuoverlo</span>
+      <div id="history-heatmap-container"></div>
+      <p class="heatmap-edit-hint">💧 verde = innaffiata</p>
+    </div>
+    <div class="history-edit-wrap" id="fertilizer-edit-section" style="display:none">
+      <span class="history-edit-label" style="margin-top:0.75rem">Storico concimature — tocca un giorno per aggiungerlo/rimuoverlo</span>
+      <div id="fertilizer-heatmap-container"></div>
+      <p class="heatmap-edit-hint">🌿 rosso = concimata</p>
+    </div>
     <div class="modal-actions">
       <button class="btn-cancel-modal" onclick="closeModal()">Annulla</button>
       <button class="btn-save-modal" onclick="savePlant()">Salva</button>
@@ -466,7 +478,7 @@
 </div>
 
 <div class="toast" id="toast"><span id="toast-msg"></span></div>
-<div class="hm-tooltip" id="hm-tooltip"></div>
+<div class="hm-tooltip" id="hm-tooltip" style="position:fixed;background:var(--gray-800);color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;pointer-events:none;z-index:200;white-space:nowrap;opacity:0;transition:opacity 0.1s;"></div>
 
 <script>
 const CLIENT_ID = '595278972600-5nh69ar36qse8puiqghieu5561ult80b.apps.googleusercontent.com';
@@ -569,10 +581,28 @@ function render() {
         <span class="status-badge ${st.badge}">${st.label}</span>
       </div>
       <div class="progress-wrap"><div class="progress-bar ${pr.cls}" style="width:${pr.pct}%"></div></div>
-      ${buildHeatmap(p)}
-      <button class="btn-water${p.lastWatered && daysSince(p.lastWatered)===0?' watered':''}" onclick="waterPlant('${p.id}')">
-        💧 ${p.lastWatered && daysSince(p.lastWatered)===0 ? 'Innaffiata oggi ✓' : 'Innaffia ora'}
+      <button class="heatmap-toggle-btn" onclick="toggleHeatmap('water','${p.id}',this)" aria-expanded="false">
+        <span>📅 Storico innaffiature</span>
+        <span class="heatmap-toggle-arrow">▼</span>
       </button>
+      <div class="heatmap-panel" id="heatmap-panel-water-${p.id}">
+        <div class="heatmap-panel-inner" id="heatmap-content-water-${p.id}"></div>
+      </div>
+      <button class="heatmap-toggle-btn" onclick="toggleHeatmap('fert','${p.id}',this)" aria-expanded="false" style="border-top:1px solid var(--gray-100);margin-top:2px">
+        <span>🌿 Storico concimature</span>
+        <span class="heatmap-toggle-arrow">▼</span>
+      </button>
+      <div class="heatmap-panel" id="heatmap-panel-fert-${p.id}">
+        <div class="heatmap-panel-inner" id="heatmap-content-fert-${p.id}"></div>
+      </div>
+      <div class="btn-action-row">
+        <button class="btn-water${p.lastWatered && daysSince(p.lastWatered)===0?' watered':''}" onclick="waterPlant('${p.id}')">
+          💧 ${p.lastWatered && daysSince(p.lastWatered)===0 ? 'Innaffiata oggi ✓' : 'Innaffia ora'}
+        </button>
+        <button class="btn-fertilize${(p.fertHistory||[]).some(h=>daysSince(h)===0)?' fertilized':''}" onclick="fertilizePlant('${p.id}')">
+          🌿 ${(p.fertHistory||[]).some(h=>daysSince(h)===0) ? 'Concimata oggi ✓' : 'Concima oggi'}
+        </button>
+      </div>
     </div>`;
   }).join('');
 }
@@ -592,6 +622,22 @@ function waterPlant(id) {
     p.history = [...(p.history||[]), now].slice(-10);
     save(); render();
     showToast(`${p.emoji||'🌱'} ${p.name} innaffiata!`);
+  }
+}
+
+function fertilizePlant(id) {
+  const p = plants.find(x => x.id === id);
+  if (!p) return;
+  const todayFert = (p.fertHistory||[]).some(h => daysSince(h) === 0);
+  if (todayFert) {
+    p.fertHistory = (p.fertHistory||[]).filter(h => daysSince(h) !== 0);
+    save(); render();
+    showToast(`${p.emoji||'🌱'} ${p.name} concimazione rimossa da oggi`);
+  } else {
+    const now = new Date().toISOString();
+    p.fertHistory = [...(p.fertHistory||[]), now].slice(-20);
+    save(); render();
+    showToast(`${p.emoji||'🌱'} ${p.name} concimata!`);
   }
 }
 
@@ -617,7 +663,8 @@ function openModal(id) {
   selectedEmoji = '🪴';
   document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
   document.querySelector('.emoji-btn[data-emoji="🪴"]').classList.add('selected');
-  const lastWateredGroup = document.getElementById('form-group-last-watered');
+  const lwGroup = document.getElementById('form-group-last-watered');
+  const histSection = document.getElementById('history-edit-section');
   if (id) {
     const p = plants.find(x => x.id === id);
     document.getElementById('modal-title').textContent = 'Modifica pianta';
@@ -627,14 +674,19 @@ function openModal(id) {
     selectedEmoji = p.emoji || '🪴';
     const eb = document.querySelector(`.emoji-btn[data-emoji="${selectedEmoji}"]`);
     if (eb) eb.classList.add('selected');
-    lastWateredGroup.style.display = 'none'; // hide when editing
+    lwGroup.style.display = 'none';
+    histSection.style.display = '';
+    document.getElementById('fertilizer-edit-section').style.display = '';
+    renderHistoryEditor(p);
   } else {
     document.getElementById('modal-title').textContent = 'Nuova pianta';
     document.getElementById('inp-name').value = '';
     document.getElementById('inp-species').value = '';
     document.getElementById('inp-freq').value = '3';
     document.getElementById('inp-last-watered').value = '';
-    lastWateredGroup.style.display = '';
+    lwGroup.style.display = '';
+    histSection.style.display = 'none';
+    document.getElementById('fertilizer-edit-section').style.display = 'none';
   }
   document.getElementById('overlay').classList.add('open');
   setTimeout(() => document.getElementById('inp-name').focus(), 100);
@@ -649,13 +701,15 @@ function savePlant() {
   if (editingId) {
     const p = plants.find(x => x.id === editingId);
     p.name = name; p.species = species; p.freq = freq; p.emoji = selectedEmoji;
+    // history already updated live by renderHistoryEditor toggles
+    p.lastWatered = p.history && p.history.length > 0
+      ? [...p.history].sort().slice(-1)[0] : null;
+    // fertHistory already kept in sync via syncEditingHistoryToPlant
   } else {
-    const lastWateredVal = document.getElementById('inp-last-watered').value;
-    let lastWatered = null;
-    let history = [];
-    if (lastWateredVal) {
-      // Create ISO string at noon to avoid timezone issues
-      lastWatered = new Date(lastWateredVal + 'T12:00:00').toISOString();
+    const lwVal = document.getElementById('inp-last-watered').value;
+    let lastWatered = null, history = [];
+    if (lwVal) {
+      lastWatered = new Date(lwVal + 'T12:00:00').toISOString();
       history = [lastWatered];
     }
     plants.push({ id: uid(), name, species, freq, emoji: selectedEmoji, lastWatered, history });
@@ -663,139 +717,253 @@ function savePlant() {
   save(); closeModal(); render();
 }
 
-// --- Heatmap ---
-function buildHeatmap(plant) {
-  const WEEKS = 18; // ~4 months
-  const today = new Date(); today.setHours(0,0,0,0);
-
-  // Build a Set of watered dates (YYYY-MM-DD)
-  const wateredDates = new Set();
-  const allEntries = [...(plant.history || [])];
-  if (plant.lastWatered && !allEntries.includes(plant.lastWatered)) allEntries.push(plant.lastWatered);
-  allEntries.forEach(iso => {
-    const d = new Date(iso); d.setHours(0,0,0,0);
-    wateredDates.add(d.toISOString().slice(0,10));
-  });
-
-  // Start from WEEKS*7 days ago, aligned to Monday
-  const startDate = new Date(today);
-  startDate.setDate(startDate.getDate() - (WEEKS * 7 - 1));
-  // Align to Monday
-  const dow = startDate.getDay(); // 0=Sun
-  const offset = dow === 0 ? -6 : 1 - dow;
-  startDate.setDate(startDate.getDate() + offset);
-
-  // Build columns (weeks), each with 7 days (Mon-Sun)
-  const cols = [];
-  let cur = new Date(startDate);
-  for (let w = 0; w < WEEKS; w++) {
-    const col = [];
-    for (let d = 0; d < 7; d++) {
-      col.push(new Date(cur));
-      cur.setDate(cur.getDate() + 1);
-    }
-    cols.push(col);
-  }
-
-  // Month labels
-  const monthNames = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+// --- Shared calendar grid builder ---
+// type: 'water' | 'fert'
+// plantId: if set, uses card toggle (saves immediately); if null, uses modal toggle
+function buildMonthGrid(year, month, markedSet, editable, type, plantId) {
+  const now = new Date(); now.setHours(0,0,0,0);
+  const isCurrentMonth = year === now.getFullYear() && month === now.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDow = new Date(year, month, 1).getDay();
+  const startOffset = (firstDow + 6) % 7;
   const dayNames = ['L','M','M','G','V','S','D'];
-
-  // Determine level: 3 = today or yesterday, 2 = within last week, 1 = older
-  function getLevel(date) {
-    const key = date.toISOString().slice(0,10);
-    if (!wateredDates.has(key)) return 0;
-    const diffDays = Math.floor((today - date) / 86400000);
-    if (diffDays <= 1) return 3;
-    if (diffDays <= 7) return 2;
-    return 1;
-  }
-
-  // Month label positions
-  let monthLabels = [];
-  cols.forEach((col, wi) => {
-    const firstDay = col[0];
-    if (wi === 0 || firstDay.getDate() <= 7) {
-      monthLabels.push({ wi, label: monthNames[firstDay.getMonth()] });
+  const markedClass = type === 'fert' ? 'fertilized' : 'watered';
+  // Card uses card-specific toggle; modal uses modal toggle
+  const toggleFn = plantId
+    ? (type === 'fert' ? `toggleCardFertDay('${plantId}',` : `toggleCardWaterDay('${plantId}',`)
+    : (type === 'fert' ? 'toggleFertDay(' : 'toggleWaterDay(');
+  let cells = '';
+  dayNames.forEach(d => { cells += `<div class="heatmap-day-head">${d}</div>`; });
+  for (let i = 0; i < startOffset; i++) cells += `<div class="heatmap-cell empty"></div>`;
+  for (let day = 1; day <= daysInMonth; day++) {
+    const thisDate = new Date(year, month, day);
+    const isToday = isCurrentMonth && day === now.getDate();
+    const isFuture = thisDate > now;
+    const isMarked = markedSet.has(day);
+    let cls = 'heatmap-cell';
+    if (isFuture) { cls += ' future'; }
+    else {
+      if (isMarked) cls += ' ' + markedClass;
+      if (editable) cls += ' editable';
     }
+    if (isToday) cls += ' today';
+    const onclick = (editable && !isFuture)
+      ? ` onclick="${toggleFn}${year},${month},${day},this)"`
+      : '';
+    cells += `<div class="${cls}"${onclick}><span class="heatmap-cell-num">${day}</span></div>`;
+  }
+  return `<div class="heatmap-grid">${cells}</div>`;
+}
+
+// helper: build Set of days from ISO list for a given year/month
+function daysSetForMonth(isoList, year, month) {
+  const s = new Set();
+  isoList.forEach(iso => {
+    const d = new Date(iso);
+    if (d.getFullYear() === year && d.getMonth() === month) s.add(d.getDate());
   });
-  // Deduplicate same month
-  monthLabels = monthLabels.filter((m, i) => i === 0 || m.label !== monthLabels[i-1].label);
+  return s;
+}
 
-  // Build HTML
-  const CELL = 10, GAP = 2;
-  const colWidth = CELL + GAP;
+// ── Card calendars (collapsible, navigable, read-only on card) ─────────────
+const cardMonthOffset = {}; // key: 'water-ID' | 'fert-ID'
 
-  // Month row (relative positioning)
-  let monthRowHtml = `<div class="heatmap-months" style="position:relative;height:14px;padding-left:22px;">`;
-  monthLabels.forEach(({ wi, label }) => {
-    const left = 22 + wi * colWidth;
-    monthRowHtml += `<span class="heatmap-month-label" style="left:${left}px">${label}</span>`;
-  });
-  monthRowHtml += '</div>';
+function toggleHeatmap(type, plantId, btn) {
+  const panelId = 'heatmap-panel-' + type + '-' + plantId;
+  const panel = document.getElementById(panelId);
+  const arrow = btn.querySelector('.heatmap-toggle-arrow');
+  const isOpen = panel.classList.contains('open');
+  if (isOpen) {
+    panel.classList.remove('open');
+    arrow.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  } else {
+    const key = type + '-' + plantId;
+    if (cardMonthOffset[key] === undefined) cardMonthOffset[key] = 0;
+    renderCardCalendar(type, plantId);
+    panel.classList.add('open');
+    arrow.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+}
 
-  // Cells grid
-  let colsHtml = cols.map(col => {
-    const cells = col.map(date => {
-      const isFuture = date > today;
-      if (isFuture) return `<div class="heatmap-cell future"></div>`;
-      const key = date.toISOString().slice(0,10);
-      const isToday = date.getTime() === today.getTime();
-      const lvl = getLevel(date);
-      const cls = [
-        'heatmap-cell',
-        lvl > 0 ? `lvl-${lvl}` : '',
-        isToday ? 'today' : ''
-      ].filter(Boolean).join(' ');
-      const label = date.toLocaleDateString('it-IT', {day:'numeric', month:'short', year:'numeric'});
-      const watered = wateredDates.has(key);
-      return `<div class="${cls}" data-date="${key}" data-label="${label}" data-watered="${watered}" onmouseenter="showHmTip(this,event)" onmouseleave="hideHmTip()" ontouchstart="showHmTip(this,event)" ontouchend="hideHmTip()"></div>`;
-    }).join('');
-    return `<div class="heatmap-col">${cells}</div>`;
-  }).join('');
+function renderCardCalendar(type, plantId) {
+  const p = plants.find(x => x.id === plantId);
+  if (!p) return;
+  const key = type + '-' + plantId;
+  const offset = cardMonthOffset[key] || 0;
+  const now = new Date();
+  const td = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+  const year = td.getFullYear(), month = td.getMonth();
+  const monthName = td.toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
+  const isCurrent = offset === 0;
 
-  const rowsHtml = `<div class="heatmap-rows">
-    <div class="heatmap-day-labels">
-      ${dayNames.map((d,i) => `<div class="heatmap-day-label">${i % 2 === 0 ? d : ''}</div>`).join('')}
+  let isoList;
+  if (type === 'water') {
+    isoList = [...(p.history || [])];
+    if (p.lastWatered && !isoList.includes(p.lastWatered)) isoList.push(p.lastWatered);
+  } else {
+    isoList = [...(p.fertHistory || [])];
+  }
+  const markedSet = daysSetForMonth(isoList, year, month);
+  const grid = buildMonthGrid(year, month, markedSet, true, type, plantId);
+
+  document.getElementById('heatmap-content-' + type + '-' + plantId).innerHTML = `
+    <div class="heatmap-nav">
+      <button class="heatmap-nav-btn" onclick="shiftCardCalendar('${type}','${plantId}',-1)">‹</button>
+      <span class="heatmap-month-title">${monthName}</span>
+      <button class="heatmap-nav-btn" onclick="shiftCardCalendar('${type}','${plantId}',1)" ${isCurrent ? 'disabled' : ''}>›</button>
     </div>
-    <div class="heatmap-cols">${colsHtml}</div>
-  </div>`;
-
-  const footer = `<div class="heatmap-footer">
-    meno
-    <div class="heatmap-legend-cell"></div>
-    <div class="heatmap-legend-cell lvl-1"></div>
-    <div class="heatmap-legend-cell lvl-2"></div>
-    <div class="heatmap-legend-cell lvl-3"></div>
-    più
-  </div>`;
-
-  return `<div class="heatmap-wrap"><div class="heatmap-inner">${monthRowHtml}${rowsHtml}${footer}</div></div>`;
+    ${grid}`;
 }
 
-function showHmTip(el, e) {
-  const tip = document.getElementById('hm-tooltip');
-  const watered = el.dataset.watered === 'true';
-  tip.textContent = watered ? `💧 ${el.dataset.label}` : el.dataset.label;
-  tip.classList.add('show');
-  positionTip(e);
+function shiftCardCalendar(type, plantId, delta) {
+  const key = type + '-' + plantId;
+  cardMonthOffset[key] = (cardMonthOffset[key] || 0) + delta;
+  renderCardCalendar(type, plantId);
 }
-function hideHmTip() {
-  document.getElementById('hm-tooltip').classList.remove('show');
-}
-function positionTip(e) {
-  const tip = document.getElementById('hm-tooltip');
-  const x = (e.touches ? e.touches[0].clientX : e.clientX);
-  const y = (e.touches ? e.touches[0].clientY : e.clientY);
-  tip.style.left = (x - tip.offsetWidth/2) + 'px';
-  tip.style.top = (y - 32) + 'px';
-}
-document.addEventListener('mousemove', e => {
-  const tip = document.getElementById('hm-tooltip');
-  if (tip.classList.contains('show')) positionTip(e);
-});
 
+// ── Modal editors ──────────────────────────────────────────────────────────
+let editingWaterHistory = [];
+let editingFertHistory  = [];
+let editingWaterOffset  = 0;
+let editingFertOffset   = 0;
 
+function renderHistoryEditor(plant) {
+  editingWaterHistory = [...(plant.history || [])];
+  if (plant.lastWatered && !editingWaterHistory.includes(plant.lastWatered))
+    editingWaterHistory.push(plant.lastWatered);
+  editingFertHistory = [...(plant.fertHistory || [])];
+  editingWaterOffset = 0;
+  editingFertOffset  = 0;
+  renderModalCalendar('water');
+  renderModalCalendar('fert');
+  syncEditingHistoryToPlant();
+}
+
+function renderModalCalendar(type) {
+  const offset   = type === 'fert' ? editingFertOffset : editingWaterOffset;
+  const isoList  = type === 'fert' ? editingFertHistory : editingWaterHistory;
+  const containerId = type === 'fert' ? 'fertilizer-heatmap-container' : 'history-heatmap-container';
+
+  const now = new Date();
+  const td  = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+  const year = td.getFullYear(), month = td.getMonth();
+  const monthName = td.toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
+  const isCurrent = offset === 0;
+
+  const markedSet = daysSetForMonth(isoList, year, month);
+  const grid = buildMonthGrid(year, month, markedSet, true, type);
+
+  document.getElementById(containerId).innerHTML = `
+    <div class="heatmap-nav">
+      <button class="heatmap-nav-btn" onclick="shiftModalCalendar('${type}',-1)">‹</button>
+      <span class="heatmap-month-title">${monthName}</span>
+      <button class="heatmap-nav-btn" onclick="shiftModalCalendar('${type}',1)" ${isCurrent ? 'disabled' : ''}>›</button>
+    </div>
+    ${grid}`;
+}
+
+function shiftModalCalendar(type, delta) {
+  if (type === 'fert') editingFertOffset += delta;
+  else editingWaterOffset += delta;
+  renderModalCalendar(type);
+}
+
+function toggleWaterDay(year, month, day, el) {
+  const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  const idx = editingWaterHistory.findIndex(h => h.slice(0,10) === key);
+  if (idx >= 0) { editingWaterHistory.splice(idx, 1); el.classList.remove('watered'); }
+  else { editingWaterHistory.push(new Date(year, month, day, 12, 0, 0).toISOString()); el.classList.add('watered'); }
+  syncEditingHistoryToPlant();
+}
+
+function toggleFertDay(year, month, day, el) {
+  const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  const idx = editingFertHistory.findIndex(h => h.slice(0,10) === key);
+  if (idx >= 0) { editingFertHistory.splice(idx, 1); el.classList.remove('fertilized'); }
+  else { editingFertHistory.push(new Date(year, month, day, 12, 0, 0).toISOString()); el.classList.add('fertilized'); }
+  syncEditingHistoryToPlant();
+}
+
+function syncEditingHistoryToPlant() {
+  if (!editingId) return;
+  const p = plants.find(x => x.id === editingId);
+  if (!p) return;
+  p.history     = [...editingWaterHistory].sort();
+  p.fertHistory = [...editingFertHistory].sort();
+  p.lastWatered = p.history.length > 0 ? p.history.slice(-1)[0] : null;
+}
+
+// ── Card-level toggles (edit directly on card, persist immediately) ────────
+function toggleCardWaterDay(plantId, year, month, day, el) {
+  const p = plants.find(x => x.id === plantId);
+  if (!p) return;
+  const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  const arr = [...(p.history || [])];
+  if (p.lastWatered && !arr.includes(p.lastWatered)) arr.push(p.lastWatered);
+  const idx = arr.findIndex(h => h.slice(0,10) === key);
+  if (idx >= 0) { arr.splice(idx, 1); el.classList.remove('watered'); }
+  else { arr.push(new Date(year, month, day, 12, 0, 0).toISOString()); el.classList.add('watered'); }
+  p.history = arr.sort();
+  p.lastWatered = p.history.length > 0 ? p.history.slice(-1)[0] : null;
+  save();
+  // Refresh only status parts without full re-render (preserve open panel)
+  refreshCardStatus(plantId);
+}
+
+function toggleCardFertDay(plantId, year, month, day, el) {
+  const p = plants.find(x => x.id === plantId);
+  if (!p) return;
+  const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  const arr = [...(p.fertHistory || [])];
+  const idx = arr.findIndex(h => h.slice(0,10) === key);
+  if (idx >= 0) { arr.splice(idx, 1); el.classList.remove('fertilized'); }
+  else { arr.push(new Date(year, month, day, 12, 0, 0).toISOString()); el.classList.add('fertilized'); }
+  p.fertHistory = arr.sort();
+  save();
+}
+
+function refreshCardStatus(plantId) {
+  const p = plants.find(x => x.id === plantId);
+  if (!p) return;
+  const card = document.querySelector(`.plant-card[data-id="${plantId}"]`);
+  if (!card) return;
+  const st = getStatus(p);
+  const pr = getProgress(p);
+  const ds = daysSince(p.lastWatered);
+  // Update left border color
+  card.className = `plant-card ${st.card}`;
+  card.setAttribute('data-id', plantId);
+  // Update last-watered label
+  const lastLabel = p.lastWatered
+    ? `<strong>${formatDate(p.lastWatered)}</strong>` + (ds > 0 ? ` <span style="color:var(--gray-400);font-size:12px">(${ds}g fa)</span>` : '')
+    : '<span style="color:var(--gray-400)">mai</span>';
+  const wl = card.querySelector('.water-last');
+  if (wl) wl.innerHTML = 'Ultima volta: ' + lastLabel;
+  // Update badge
+  const badge = card.querySelector('.status-badge');
+  if (badge) { badge.className = `status-badge ${st.badge}`; badge.textContent = st.label; }
+  // Update progress bar
+  const pb = card.querySelector('.progress-bar');
+  if (pb) { pb.className = `progress-bar ${pr.cls}`; pb.style.width = pr.pct + '%'; }
+  // Update water button
+  const wb = card.querySelector('.btn-water');
+  if (wb) {
+    const todayWatered = p.lastWatered && daysSince(p.lastWatered) === 0;
+    wb.className = 'btn-water' + (todayWatered ? ' watered' : '');
+    wb.innerHTML = '💧 ' + (todayWatered ? 'Innaffiata oggi ✓' : 'Innaffia ora');
+  }
+  // Update fertilize button
+  const fb = card.querySelector('.btn-fertilize');
+  if (fb) {
+    const todayFert = (p.fertHistory||[]).some(h => daysSince(h) === 0);
+    fb.className = 'btn-fertilize' + (todayFert ? ' fertilized' : '');
+    fb.innerHTML = '🌿 ' + (todayFert ? 'Concimata oggi ✓' : 'Concima oggi');
+  }
+}
+
+// --- Toast ---
 let toastTimer = null;
 function showToast(msg, undoFn) {
   const t = document.getElementById('toast');
