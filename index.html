@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Le mie piante">
+<meta name="apple-mobile-web-app-title" content="Home Nature">
 <meta name="theme-color" content="#f6faf0">
-<title>Le mie piante</title>
+<title>Home Nature</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -19,7 +19,14 @@
     --green-400: #7eba42;
     --green-600: #3d7a1a;
     --green-800: #1e4a08;
+    --blue-50: #f0f7ff;
+    --blue-100: #d0e8ff;
+    --blue-200: #93c5fd;
+    --blue-400: #3b9fe8;
+    --blue-600: #1565c0;
+    --blue-800: #0d3a7a;
     --amber-200: #fcd97a;
+    --amber-400: #f5b700;
     --amber-600: #b07d10;
     --red-200: #fca5a5;
     --red-600: #c03030;
@@ -44,7 +51,55 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* HEADER */
+  /* ═══════════════════════════════
+     HOME SCREEN
+  ═══════════════════════════════ */
+  #home-screen {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100dvh;
+    padding: 2rem 1.5rem;
+  }
+  .home-emoji { font-size: 56px; margin-bottom: 1.25rem; }
+  .home-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px; font-weight: 400;
+    color: var(--green-800); margin-bottom: 0.4rem;
+    text-align: center; letter-spacing: -0.3px;
+  }
+  .home-sub {
+    font-size: 14px; color: var(--gray-400);
+    margin-bottom: 2.5rem; text-align: center;
+  }
+  .home-question {
+    font-size: 17px; font-weight: 500;
+    color: var(--gray-600); margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .home-btn {
+    width: 100%; max-width: 320px;
+    padding: 18px 24px;
+    border: none; border-radius: var(--radius-lg);
+    font-size: 17px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer; display: flex;
+    align-items: center; justify-content: center; gap: 12px;
+    transition: transform 0.12s, box-shadow 0.12s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+  .home-btn:active { transform: scale(0.97); }
+  .home-btn + .home-btn { margin-top: 14px; }
+  .home-btn-plants {
+    background: var(--green-600); color: #fff;
+  }
+  .home-btn-aquarium {
+    background: var(--blue-600); color: #fff;
+  }
+  .home-btn-icon { font-size: 24px; }
+
+  /* ═══════════════════════════════
+     SHARED HEADER
+  ═══════════════════════════════ */
   .app-header {
     position: sticky; top: 0; z-index: 10;
     background: var(--green-50);
@@ -52,16 +107,35 @@
     padding: 1rem 1.25rem 0.875rem;
     display: flex; align-items: center; justify-content: space-between;
   }
+  .app-header.aqua-header {
+    background: var(--blue-50);
+    border-bottom-color: var(--blue-100);
+  }
   .app-title {
     font-family: 'DM Serif Display', serif;
-    font-size: 24px; font-weight: 400;
+    font-size: 22px; font-weight: 400;
     color: var(--green-800); letter-spacing: -0.3px;
     display: flex; align-items: center; gap: 8px;
   }
+  .aqua-header .app-title { color: var(--blue-800); }
   .app-subtitle { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
   .header-right { display: flex; align-items: center; gap: 8px; }
 
-  /* SYNC BUTTON */
+  .btn-back {
+    display: flex; align-items: center; gap: 5px;
+    background: none; border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 7px 12px; font-size: 13px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer; color: var(--gray-600);
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .btn-back:hover { background: var(--gray-100); }
+
+  /* ═══════════════════════════════
+     PLANTS (unchanged styles)
+  ═══════════════════════════════ */
   .btn-sync {
     display: flex; align-items: center; gap: 5px;
     background: none; border: 1px solid var(--gray-200);
@@ -75,10 +149,7 @@
   .btn-sync:hover { background: var(--gray-100); border-color: var(--gray-400); }
   .btn-sync.connected { border-color: var(--green-200); color: var(--green-600); background: var(--green-50); }
   .btn-sync.syncing { opacity: 0.6; pointer-events: none; }
-  .sync-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--gray-300); flex-shrink: 0;
-  }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gray-300); flex-shrink: 0; }
   .sync-dot.on { background: var(--green-400); }
   .sync-dot.spinning {
     border: 2px solid var(--green-200); border-top-color: var(--green-600);
@@ -86,7 +157,6 @@
     width: 9px; height: 9px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .btn-add {
     display: flex; align-items: center; gap: 5px;
     background: var(--green-600); color: #fff;
@@ -97,11 +167,7 @@
     transition: background 0.15s, transform 0.1s;
   }
   .btn-add:active { background: var(--green-800); transform: scale(0.97); }
-
-  /* MAIN */
   .main { padding: 1rem 1.25rem 6rem; }
-
-  /* PLANT CARD */
   .plant-card {
     background: #fff; border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
@@ -115,7 +181,6 @@
   }
   .plant-card.urgent::before { background: var(--amber-200); }
   .plant-card.overdue::before { background: var(--red-200); }
-
   .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
   .plant-name { font-size: 16px; font-weight: 500; color: var(--gray-800); display: flex; align-items: center; gap: 6px; }
   .plant-emoji { font-size: 20px; }
@@ -128,23 +193,19 @@
     transition: background 0.1s, color 0.1s; line-height: 1;
   }
   .btn-icon:hover { background: var(--gray-100); color: var(--gray-600); }
-
   .card-mid { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
   .water-last { font-size: 13px; color: var(--gray-600); }
   .water-last strong { color: var(--gray-800); font-weight: 500; }
   .water-days { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
-
   .status-badge { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
   .badge-ok { background: var(--green-100); color: var(--green-800); }
   .badge-urgent { background: #fff3cd; color: #7a5400; }
   .badge-overdue { background: #fde8e8; color: var(--red-600); }
   .badge-never { background: var(--gray-100); color: var(--gray-600); }
-
   .progress-wrap { height: 5px; background: var(--gray-100); border-radius: 99px; margin-bottom: 12px; overflow: hidden; }
   .progress-bar { height: 100%; border-radius: 99px; transition: width 0.3s; background: var(--green-400); }
   .progress-bar.urgent { background: #f5b700; }
   .progress-bar.overdue { background: var(--red-200); width: 100% !important; }
-
   .history-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 11px; }
   .history-chip {
     font-size: 11px; color: var(--green-600);
@@ -152,7 +213,6 @@
     padding: 3px 8px; border-radius: 20px;
     display: flex; align-items: center; gap: 3px;
   }
-
   .btn-action-row { display: flex; gap: 8px; }
   .btn-water {
     flex: 1; padding: 10px;
@@ -174,13 +234,10 @@
   }
   .btn-fertilize:active { background: #ffe0e0; transform: scale(0.98); }
   .btn-fertilize.fertilized { background: #ffe0e0; border-color: var(--red-600); }
-
   .empty-state { text-align: center; padding: 4rem 2rem; color: var(--gray-400); }
   .empty-icon { font-size: 64px; margin-bottom: 1rem; display: block; }
   .empty-state h2 { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 400; color: var(--gray-600); margin-bottom: 0.5rem; }
   .empty-state p { font-size: 14px; line-height: 1.6; }
-
-  /* MODAL */
   .overlay {
     display: none; position: fixed; inset: 0; z-index: 50;
     background: rgba(30,50,10,0.35); backdrop-filter: blur(3px);
@@ -203,7 +260,6 @@
   @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   .modal-handle { width: 36px; height: 4px; background: var(--gray-200); border-radius: 99px; margin: 0 auto 1.25rem; }
   .modal h2 { font-family: 'DM Serif Display', serif; font-size: 20px; font-weight: 400; color: var(--green-800); margin-bottom: 1.25rem; }
-
   .form-group { margin-bottom: 1rem; }
   .form-group label { font-size: 13px; color: var(--gray-600); display: block; margin-bottom: 5px; font-weight: 500; }
   .form-group input, .form-group select {
@@ -214,7 +270,6 @@
     transition: border-color 0.15s; -webkit-appearance: none; appearance: none;
   }
   .form-group input:focus, .form-group select:focus { border-color: var(--green-400); }
-
   .emoji-picker { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
   .emoji-btn {
     font-size: 24px; background: var(--gray-50);
@@ -223,7 +278,6 @@
     cursor: pointer; transition: border-color 0.1s, background 0.1s;
   }
   .emoji-btn.selected { border-color: var(--green-400); background: var(--green-50); }
-
   .modal-actions { display: flex; gap: 10px; margin-top: 1.25rem; }
   .modal-actions button {
     flex: 1; padding: 11px; border-radius: var(--radius-sm);
@@ -233,8 +287,6 @@
   .modal-actions button:active { transform: scale(0.97); }
   .btn-cancel-modal { background: var(--gray-100); color: var(--gray-600); }
   .btn-save-modal { background: var(--green-600); color: #fff; }
-
-  /* FAB */
   .fab {
     position: fixed; bottom: calc(1.5rem + env(safe-area-inset-bottom, 0)); right: 1.5rem;
     width: 58px; height: 58px; background: var(--green-600); color: #fff;
@@ -244,8 +296,6 @@
     transition: transform 0.15s, background 0.15s; z-index: 20;
   }
   .fab:active { transform: scale(0.93); background: var(--green-800); }
-
-  /* TOAST */
   .toast {
     position: fixed; bottom: calc(5rem + env(safe-area-inset-bottom, 0));
     left: 50%; transform: translateX(-50%) translateY(20px);
@@ -264,8 +314,6 @@
     font-family: 'DM Sans', sans-serif; transition: background 0.15s;
   }
   .toast-undo:hover { background: rgba(255,255,255,0.3); }
-
-  /* DRIVE PANEL */
   .drive-panel {
     background: #fff; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0));
@@ -296,8 +344,6 @@
   .btn-drive-logout:hover { background: var(--gray-200); }
   .drive-hint { font-size: 12px; color: var(--gray-400); text-align: center; margin-top: 4px; line-height: 1.5; }
   .drive-sep { height: 1px; background: var(--gray-100); margin: 4px 0; }
-
-  /* HEATMAP TOGGLE */
   .heatmap-toggle-btn {
     width: 100%; background: none; border: none; cursor: pointer;
     display: flex; align-items: center; justify-content: space-between;
@@ -306,26 +352,15 @@
     margin-bottom: 0;
   }
   .heatmap-toggle-btn:hover { color: var(--gray-600); }
-  .heatmap-toggle-arrow {
-    font-size: 10px; transition: transform 0.25s;
-    display: inline-block;
-  }
+  .heatmap-toggle-arrow { font-size: 10px; transition: transform 0.25s; display: inline-block; }
   .heatmap-toggle-arrow.open { transform: rotate(180deg); }
-
-  /* HEATMAP PANEL */
   .heatmap-panel {
-    overflow: hidden;
-    max-height: 0;
+    overflow: hidden; max-height: 0;
     transition: max-height 0.32s ease, opacity 0.25s ease;
     opacity: 0;
   }
-  .heatmap-panel.open {
-    max-height: 700px;
-    opacity: 1;
-  }
+  .heatmap-panel.open { max-height: 700px; opacity: 1; }
   .heatmap-panel-inner { padding-bottom: 10px; }
-
-  /* NAV */
   .heatmap-nav {
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 8px;
@@ -339,141 +374,457 @@
   }
   .heatmap-nav-btn:hover { background: var(--gray-100); }
   .heatmap-nav-btn:disabled { opacity: 0.3; cursor: default; }
-  .heatmap-month-title {
-    font-size: 13px; font-weight: 500; color: var(--gray-700);
-    text-transform: capitalize;
-  }
-
-  /* GRID */
-  .heatmap-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-  }
-  .heatmap-day-head {
-    font-size: 9px; color: var(--gray-400);
-    text-align: center; padding-bottom: 2px;
-  }
+  .heatmap-month-title { font-size: 13px; font-weight: 500; color: var(--gray-700); text-transform: capitalize; }
+  .heatmap-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .heatmap-day-head { font-size: 9px; color: var(--gray-400); text-align: center; padding-bottom: 2px; }
   .heatmap-cell {
-    aspect-ratio: 1;
-    border-radius: 3px;
-    background: var(--gray-100);
-    position: relative;
-    min-width: 0;
-    transition: transform 0.1s;
+    aspect-ratio: 1; border-radius: 3px; background: var(--gray-100);
+    position: relative; min-width: 0; transition: transform 0.1s;
   }
   .heatmap-cell.empty { background: transparent; pointer-events: none; }
   .heatmap-cell.future { background: var(--gray-50); opacity: 0.4; pointer-events: none; }
-  .heatmap-cell.watered { background: var(--green-400); }
-  .heatmap-cell.fertilized { background: var(--red-200); }
-  .heatmap-cell.today { box-shadow: 0 0 0 1.5px var(--green-600); }
-  .heatmap-cell.today.watered { background: var(--green-600); }
-  .heatmap-cell.today.fertilized { background: var(--red-600); box-shadow: 0 0 0 1.5px var(--red-600); }
   .heatmap-cell.editable { cursor: pointer; }
-  .heatmap-cell.editable:active { transform: scale(0.88); }
+  .heatmap-cell.editable:hover { transform: scale(1.1); }
+  .heatmap-cell.today { outline: 2px solid var(--green-400); outline-offset: 1px; }
+  .heatmap-cell.watered { background: var(--green-200); }
+  .heatmap-cell.fertilized { background: var(--red-200); }
   .heatmap-cell-num {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 8px; color: var(--gray-400); pointer-events: none;
+    position: absolute; bottom: 1px; right: 2px;
+    font-size: 8px; color: var(--gray-400); line-height: 1;
   }
   .heatmap-cell.watered .heatmap-cell-num,
-  .heatmap-cell.fertilized .heatmap-cell-num { color: rgba(255,255,255,0.85); }
-  .heatmap-cell.today:not(.watered):not(.fertilized) .heatmap-cell-num { color: var(--green-600); font-weight: 600; }
+  .heatmap-cell.fertilized .heatmap-cell-num { color: rgba(0,0,0,0.35); }
+  .history-edit-wrap { margin-bottom: 0.5rem; }
+  .history-edit-label { font-size: 12px; color: var(--gray-500); display: block; margin-bottom: 8px; font-weight: 500; }
+  .heatmap-edit-hint { font-size: 11px; color: var(--gray-400); margin-top: 5px; }
 
-  /* History section in edit modal */
-  .history-edit-wrap { margin-top: 0.25rem; }
-  .history-edit-label { font-size: 13px; color: var(--gray-600); font-weight: 500; margin-bottom: 6px; display: block; }
-  .heatmap-edit-hint { font-size: 11px; color: var(--gray-400); margin-top: 5px; text-align: center; }
+  /* ═══════════════════════════════
+     AQUARIUM SECTION
+  ═══════════════════════════════ */
+  #aquarium-screen { display: none; }
+  #aquarium-screen.visible { display: block; }
 
+  .aqua-main { padding: 1rem 1.25rem 6rem; background: var(--blue-50); min-height: 100dvh; }
+
+  /* Sezione titolo */
+  .aqua-section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; font-weight: 400; color: var(--blue-800);
+    margin: 1.5rem 0 0.75rem;
+  }
+  .aqua-section-title:first-child { margin-top: 0; }
+
+  /* Card acquario generica */
+  .aqua-card {
+    background: #fff; border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card); margin-bottom: 0.875rem;
+    overflow: hidden;
+  }
+
+  /* ─── STORICO CAMBI D'ACQUA ─── */
+  .water-change-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .water-change-row:last-child { border-bottom: none; }
+  .water-change-date { font-size: 14px; font-weight: 500; color: var(--gray-800); }
+  .water-change-days { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+  .water-change-badge {
+    font-size: 11px; font-weight: 500; padding: 4px 10px;
+    border-radius: 20px; background: var(--blue-100); color: var(--blue-800);
+  }
+
+  .aqua-add-btn {
+    width: 100%; padding: 12px;
+    background: var(--blue-50); border: 1.5px dashed var(--blue-200);
+    border-radius: var(--radius-lg); color: var(--blue-600);
+    font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.15s;
+    margin-bottom: 0.875rem;
+  }
+  .aqua-add-btn:active { background: var(--blue-100); }
+
+  /* ─── STORICO FERTILIZZANTE ─── */
+  /* calendario mensile con celle cliccabili */
+  .fert-aqua-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 4px; padding: 0.875rem 1rem 1rem;
+  }
+  .fert-aqua-head { font-size: 9px; color: var(--gray-400); text-align: center; padding-bottom: 2px; }
+  .fert-aqua-cell {
+    aspect-ratio: 1; border-radius: 4px;
+    background: var(--gray-100); position: relative;
+    min-width: 0; cursor: pointer;
+    transition: transform 0.1s, background 0.12s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fert-aqua-cell.empty { background: transparent; pointer-events: none; }
+  .fert-aqua-cell.future { background: var(--gray-50); opacity: 0.35; pointer-events: none; }
+  .fert-aqua-cell.today { outline: 2px solid var(--blue-400); outline-offset: 1px; }
+  .fert-aqua-cell:not(.empty):not(.future):hover { transform: scale(1.08); }
+  .fert-aqua-cell.tabs   { background: #86efac; } /* verde */
+  .fert-aqua-cell.liquid { background: var(--amber-200); } /* giallo */
+  .fert-aqua-num {
+    font-size: 8px; color: var(--gray-500); position: absolute;
+    bottom: 1px; right: 2px; line-height: 1;
+  }
+  .fert-aqua-cell.tabs   .fert-aqua-num { color: rgba(0,0,0,0.3); }
+  .fert-aqua-cell.liquid .fert-aqua-num { color: rgba(0,0,0,0.3); }
+  .fert-legend {
+    display: flex; gap: 14px; padding: 0 1rem 0.875rem;
+    font-size: 11px; color: var(--gray-500);
+  }
+  .fert-legend-item { display: flex; align-items: center; gap: 5px; }
+  .fert-legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+  /* ─── STORICO ANALISI ─── */
+  .analysis-month-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 1rem 0;
+  }
+  .analysis-nav-btn {
+    background: none; border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm); padding: 3px 10px;
+    font-size: 16px; cursor: pointer; color: var(--gray-600);
+    line-height: 1.4; transition: background 0.1s; font-family: 'DM Sans', sans-serif;
+  }
+  .analysis-nav-btn:hover { background: var(--gray-100); }
+  .analysis-nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .analysis-month-title { font-size: 13px; font-weight: 500; color: var(--gray-700); text-transform: capitalize; }
+
+  .analysis-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 4px; padding: 0.875rem 1rem 1rem;
+  }
+  .analysis-head { font-size: 9px; color: var(--gray-400); text-align: center; padding-bottom: 2px; }
+  .analysis-cell {
+    aspect-ratio: 1; border-radius: 4px;
+    background: var(--gray-100); position: relative;
+    min-width: 0; cursor: pointer;
+    transition: transform 0.1s, background 0.12s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .analysis-cell.empty { background: transparent; pointer-events: none; }
+  .analysis-cell.future { background: var(--gray-50); opacity: 0.35; pointer-events: none; }
+  .analysis-cell.today { outline: 2px solid var(--blue-400); outline-offset: 1px; }
+  .analysis-cell:not(.empty):not(.future):hover { transform: scale(1.08); }
+  .analysis-cell.has-data { background: var(--blue-200); cursor: pointer; }
+  .analysis-num {
+    font-size: 8px; color: var(--gray-500); position: absolute;
+    bottom: 1px; right: 2px; line-height: 1;
+  }
+  .analysis-cell.has-data .analysis-num { color: rgba(0,0,0,0.3); }
+
+  /* ─── MODAL ANALISI ─── */
+  .aqua-overlay {
+    display: none; position: fixed; inset: 0; z-index: 50;
+    background: rgba(10,30,70,0.35); backdrop-filter: blur(3px);
+    align-items: flex-end; justify-content: center;
+    overflow-y: auto;
+  }
+  .aqua-overlay.open { display: flex; }
+  @media (min-height: 700px) {
+    .aqua-overlay { align-items: center; }
+    .aqua-modal { border-radius: var(--radius-lg) !important; max-height: 88dvh !important; }
+  }
+  .aqua-modal {
+    background: #fff;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0));
+    width: 100%; max-width: 480px;
+    box-shadow: var(--shadow-modal); animation: slideUp 0.22s ease-out;
+    max-height: 92dvh; overflow-y: auto;
+  }
+  .aqua-modal h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; font-weight: 400; color: var(--blue-800); margin-bottom: 1.25rem;
+  }
+  .param-row {
+    display: flex; align-items: center; margin-bottom: 0.875rem;
+    gap: 10px;
+  }
+  .param-label {
+    font-size: 14px; font-weight: 500; color: var(--gray-700);
+    width: 110px; flex-shrink: 0;
+  }
+  .param-unit { font-size: 12px; color: var(--gray-400); flex-shrink: 0; }
+  .param-input {
+    flex: 1; padding: 9px 12px;
+    border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
+    font-size: 15px; font-family: 'DM Sans', sans-serif;
+    color: var(--gray-800); background: #fff; outline: none;
+    transition: border-color 0.15s; -webkit-appearance: none; appearance: none;
+  }
+  .param-input:focus { border-color: var(--blue-400); }
+  .param-status {
+    font-size: 11px; font-weight: 500; padding: 3px 8px;
+    border-radius: 20px; flex-shrink: 0;
+  }
+  .status-ok { background: #dcfce7; color: #166534; }
+  .status-warn { background: #fef9c3; color: #854d0e; }
+  .status-danger { background: #fee2e2; color: #991b1b; }
+  .btn-save-aqua {
+    width: 100%; padding: 12px; margin-top: 0.5rem;
+    background: var(--blue-600); color: #fff; border: none;
+    border-radius: var(--radius-sm); font-size: 15px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    transition: background 0.15s; text-align: center;
+  }
+  .btn-save-aqua:active { background: var(--blue-800); }
+  .btn-cancel-aqua {
+    width: 100%; padding: 11px; margin-top: 8px;
+    background: var(--gray-100); color: var(--gray-600); border: none;
+    border-radius: var(--radius-sm); font-size: 15px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.15s;
+  }
+  .btn-cancel-aqua:active { background: var(--gray-200); }
+  .analysis-summary {
+    background: var(--blue-50); border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem; margin-bottom: 1.25rem;
+    font-size: 13px; color: var(--blue-800); line-height: 1.6;
+  }
+
+  /* modal cambio acqua */
+  .aqua-wc-overlay {
+    display: none; position: fixed; inset: 0; z-index: 50;
+    background: rgba(10,30,70,0.35); backdrop-filter: blur(3px);
+    align-items: flex-end; justify-content: center;
+  }
+  .aqua-wc-overlay.open { display: flex; }
+  @media (min-height: 700px) {
+    .aqua-wc-overlay { align-items: center; }
+    .aqua-wc-modal { border-radius: var(--radius-lg) !important; }
+  }
+  .aqua-wc-modal {
+    background: #fff;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0));
+    width: 100%; max-width: 480px;
+    box-shadow: var(--shadow-modal); animation: slideUp 0.22s ease-out;
+  }
+  .aqua-wc-modal h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; font-weight: 400; color: var(--blue-800); margin-bottom: 1.25rem;
+  }
+  .aqua-wc-modal .form-group input:focus { border-color: var(--blue-400); }
+
+  /* screens visibility */
+  #plants-screen { display: none; }
+  #plants-screen.visible { display: block; }
 </style>
 </head>
 <body>
 
-<header class="app-header">
-  <div>
-    <div class="app-title"><span>🌿</span> Le mie piante</div>
-    <div class="app-subtitle" id="subtitle">caricamento...</div>
-  </div>
-  <div class="header-right">
-    <button class="btn-sync" id="btn-sync" onclick="openDrivePanel()">
-      <span class="sync-dot" id="sync-dot"></span>
-      <span id="sync-label">Drive</span>
-    </button>
-    <button class="btn-add" onclick="openModal()">＋ Aggiungi</button>
-  </div>
-</header>
+<!-- ═══════════════════ HOME ═══════════════════ -->
+<div id="home-screen">
+  <div class="home-emoji">🌿</div>
+  <div class="home-title">Home Nature</div>
+  <div class="home-sub">Scegli cosa vuoi aggiornare</div>
+  <div class="home-question">Cosa vuoi aggiornare?</div>
+  <button class="home-btn home-btn-plants" onclick="showPlants()">
+    <span class="home-btn-icon">🪴</span> Le mie Piante
+  </button>
+  <button class="home-btn home-btn-aquarium" onclick="showAquarium()">
+    <span class="home-btn-icon">🐟</span> Il mio Acquario
+  </button>
+</div>
 
-<main class="main" id="plant-list"></main>
+<!-- ═══════════════════ PIANTE ═══════════════════ -->
+<div id="plants-screen">
+  <header class="app-header">
+    <div>
+      <div class="app-title">🪴 Le mie piante</div>
+      <div class="app-subtitle" id="subtitle">caricamento…</div>
+    </div>
+    <div class="header-right">
+      <button class="btn-back" onclick="goHome()">← Home</button>
+      <button class="btn-sync" id="btn-sync" onclick="openDrivePanel()">
+        <span class="sync-dot" id="sync-dot"></span>
+        <span id="sync-label">Drive</span>
+      </button>
+    </div>
+  </header>
+  <main class="main" id="plant-list"></main>
+  <button class="fab" onclick="openModal()" aria-label="Aggiungi pianta">＋</button>
 
-<button class="fab" onclick="openModal()" aria-label="Aggiungi pianta">＋</button>
-
-<!-- Plant modal -->
-<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
-  <div class="modal" id="modal">
-    <div class="modal-handle"></div>
-    <h2 id="modal-title">Nuova pianta</h2>
-    <div class="form-group">
-      <label>Icona</label>
-      <div class="emoji-picker" id="emoji-picker">
-        <button class="emoji-btn selected" data-emoji="🪴" onclick="selectEmoji(this)">🪴</button>
-        <button class="emoji-btn" data-emoji="🌿" onclick="selectEmoji(this)">🌿</button>
-        <button class="emoji-btn" data-emoji="🌱" onclick="selectEmoji(this)">🌱</button>
-        <button class="emoji-btn" data-emoji="🌵" onclick="selectEmoji(this)">🌵</button>
-        <button class="emoji-btn" data-emoji="🌺" onclick="selectEmoji(this)">🌺</button>
-        <button class="emoji-btn" data-emoji="🌻" onclick="selectEmoji(this)">🌻</button>
-        <button class="emoji-btn" data-emoji="🍀" onclick="selectEmoji(this)">🍀</button>
-        <button class="emoji-btn" data-emoji="🌳" onclick="selectEmoji(this)">🌳</button>
-        <button class="emoji-btn" data-emoji="🎋" onclick="selectEmoji(this)">🎋</button>
-        <button class="emoji-btn" data-emoji="🍃" onclick="selectEmoji(this)">🍃</button>
+  <!-- Modal nuova/modifica pianta -->
+  <div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <h2 id="modal-title">Nuova pianta</h2>
+      <div class="form-group">
+        <label>Emoji</label>
+        <div class="emoji-picker">
+          <button class="emoji-btn selected" data-emoji="🪴" onclick="selectEmoji(this)">🪴</button>
+          <button class="emoji-btn" data-emoji="🌵" onclick="selectEmoji(this)">🌵</button>
+          <button class="emoji-btn" data-emoji="🌸" onclick="selectEmoji(this)">🌸</button>
+          <button class="emoji-btn" data-emoji="🌺" onclick="selectEmoji(this)">🌺</button>
+          <button class="emoji-btn" data-emoji="🌻" onclick="selectEmoji(this)">🌻</button>
+          <button class="emoji-btn" data-emoji="🌿" onclick="selectEmoji(this)">🌿</button>
+          <button class="emoji-btn" data-emoji="🍀" onclick="selectEmoji(this)">🍀</button>
+          <button class="emoji-btn" data-emoji="🌱" onclick="selectEmoji(this)">🌱</button>
+          <button class="emoji-btn" data-emoji="🎍" onclick="selectEmoji(this)">🎍</button>
+          <button class="emoji-btn" data-emoji="🎋" onclick="selectEmoji(this)">🎋</button>
+          <button class="emoji-btn" data-emoji="🍃" onclick="selectEmoji(this)">🍃</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Nome</label>
+        <input type="text" id="inp-name" placeholder="es. Basilico sul davanzale" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Specie (opzionale)</label>
+        <input type="text" id="inp-species" placeholder="es. Ocimum basilicum" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Va innaffiata ogni</label>
+        <select id="inp-freq">
+          <option value="1">Ogni giorno</option>
+          <option value="2">Ogni 2 giorni</option>
+          <option value="3" selected>Ogni 3 giorni</option>
+          <option value="5">Ogni 5 giorni</option>
+          <option value="7">Una volta a settimana</option>
+          <option value="10">Ogni 10 giorni</option>
+          <option value="14">Ogni 2 settimane</option>
+          <option value="30">Una volta al mese</option>
+        </select>
+      </div>
+      <div class="form-group" id="form-group-last-watered">
+        <label>Ultima innaffiatura (opzionale)</label>
+        <input type="date" id="inp-last-watered">
+      </div>
+      <div class="history-edit-wrap" id="history-edit-section" style="display:none">
+        <span class="history-edit-label">Storico innaffiature — tocca un giorno per aggiungerlo/rimuoverlo</span>
+        <div id="history-heatmap-container"></div>
+        <p class="heatmap-edit-hint">💧 verde = innaffiata</p>
+      </div>
+      <div class="history-edit-wrap" id="fertilizer-edit-section" style="display:none">
+        <span class="history-edit-label" style="margin-top:0.75rem">Storico concimature — tocca un giorno per aggiungerlo/rimuoverlo</span>
+        <div id="fertilizer-heatmap-container"></div>
+        <p class="heatmap-edit-hint">🌿 rosso = concimata</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel-modal" onclick="closeModal()">Annulla</button>
+        <button class="btn-save-modal" onclick="savePlant()">Salva</button>
       </div>
     </div>
-    <div class="form-group">
-      <label>Nome</label>
-      <input type="text" id="inp-name" placeholder="es. Basilico sul davanzale" autocomplete="off">
-    </div>
-    <div class="form-group">
-      <label>Specie (opzionale)</label>
-      <input type="text" id="inp-species" placeholder="es. Ocimum basilicum" autocomplete="off">
-    </div>
-    <div class="form-group">
-      <label>Va innaffiata ogni</label>
-      <select id="inp-freq">
-        <option value="1">Ogni giorno</option>
-        <option value="2">Ogni 2 giorni</option>
-        <option value="3" selected>Ogni 3 giorni</option>
-        <option value="5">Ogni 5 giorni</option>
-        <option value="7">Una volta a settimana</option>
-        <option value="10">Ogni 10 giorni</option>
-        <option value="14">Ogni 2 settimane</option>
-        <option value="30">Una volta al mese</option>
-      </select>
-    </div>
-    <div class="form-group" id="form-group-last-watered">
-      <label>Ultima innaffiatura (opzionale)</label>
-      <input type="date" id="inp-last-watered">
-    </div>
-    <div class="history-edit-wrap" id="history-edit-section" style="display:none">
-      <span class="history-edit-label">Storico innaffiature — tocca un giorno per aggiungerlo/rimuoverlo</span>
-      <div id="history-heatmap-container"></div>
-      <p class="heatmap-edit-hint">💧 verde = innaffiata</p>
-    </div>
-    <div class="history-edit-wrap" id="fertilizer-edit-section" style="display:none">
-      <span class="history-edit-label" style="margin-top:0.75rem">Storico concimature — tocca un giorno per aggiungerlo/rimuoverlo</span>
-      <div id="fertilizer-heatmap-container"></div>
-      <p class="heatmap-edit-hint">🌿 rosso = concimata</p>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel-modal" onclick="closeModal()">Annulla</button>
-      <button class="btn-save-modal" onclick="savePlant()">Salva</button>
+  </div>
+
+  <!-- Drive panel -->
+  <div class="overlay" id="drive-overlay" onclick="handleDriveOverlayClick(event)">
+    <div class="drive-panel">
+      <div class="modal-handle"></div>
+      <div id="drive-content"></div>
     </div>
   </div>
 </div>
 
-<!-- Drive panel -->
-<div class="overlay" id="drive-overlay" onclick="handleDriveOverlayClick(event)">
-  <div class="drive-panel">
+<!-- ═══════════════════ ACQUARIO ═══════════════════ -->
+<div id="aquarium-screen">
+  <header class="app-header aqua-header">
+    <div>
+      <div class="app-title">🐟 Il mio Acquario</div>
+      <div class="app-subtitle" id="aqua-subtitle">storico e analisi</div>
+    </div>
+    <div class="header-right">
+      <button class="btn-back" onclick="goHome()">← Home</button>
+    </div>
+  </header>
+  <main class="aqua-main">
+
+    <!-- CAMBI D'ACQUA -->
+    <div class="aqua-section-title">💧 Storico Cambi d'Acqua</div>
+    <button class="aqua-add-btn" onclick="openWaterChangeModal()">＋ Registra cambio d'acqua</button>
+    <div class="aqua-card" id="wc-list-card" style="display:none">
+      <div id="wc-list"></div>
+    </div>
+
+    <!-- FERTILIZZANTE -->
+    <div class="aqua-section-title">🌱 Storico Fertilizzante</div>
+    <div class="aqua-card">
+      <div id="fert-aqua-nav" style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem 0;">
+        <button class="analysis-nav-btn" onclick="shiftFertAquaMonth(-1)">‹</button>
+        <span class="heatmap-month-title" id="fert-aqua-month-title"></span>
+        <button class="analysis-nav-btn" id="fert-aqua-next-btn" onclick="shiftFertAquaMonth(1)">›</button>
+      </div>
+      <div class="fert-aqua-grid" id="fert-aqua-grid"></div>
+      <div class="fert-legend">
+        <div class="fert-legend-item"><div class="fert-legend-dot" style="background:#86efac"></div> Tabs</div>
+        <div class="fert-legend-item"><div class="fert-legend-dot" style="background:var(--amber-200)"></div> Liquido</div>
+      </div>
+    </div>
+
+    <!-- ANALISI -->
+    <div class="aqua-section-title">🔬 Storico Analisi</div>
+    <div class="aqua-card">
+      <div class="analysis-month-nav" id="analysis-nav">
+        <button class="analysis-nav-btn" onclick="shiftAnalysisMonth(-1)">‹</button>
+        <span class="analysis-month-title" id="analysis-month-title"></span>
+        <button class="analysis-nav-btn" id="analysis-next-btn" onclick="shiftAnalysisMonth(1)">›</button>
+      </div>
+      <div class="analysis-grid" id="analysis-grid"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal Cambio d'acqua -->
+<div class="aqua-wc-overlay" id="wc-overlay" onclick="if(event.target===this)closeWaterChangeModal()">
+  <div class="aqua-wc-modal">
     <div class="modal-handle"></div>
-    <div id="drive-content"></div>
+    <h2>Cambio d'acqua</h2>
+    <div class="form-group">
+      <label>Data</label>
+      <input type="date" id="wc-date" style="border-color:var(--blue-200)">
+    </div>
+    <div class="form-group">
+      <label>Percentuale cambiata (opzionale)</label>
+      <input type="number" id="wc-pct" placeholder="es. 30" min="1" max="100" style="border-color:var(--blue-200)">
+    </div>
+    <div class="form-group">
+      <label>Note (opzionale)</label>
+      <input type="text" id="wc-note" placeholder="es. Aggiunta di sale, filtro pulito…" autocomplete="off" style="border-color:var(--blue-200)">
+    </div>
+    <div class="modal-actions" style="margin-top:1rem">
+      <button class="btn-cancel-modal" onclick="closeWaterChangeModal()">Annulla</button>
+      <button style="flex:1;padding:11px;border-radius:var(--radius-sm);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;background:var(--blue-600);color:#fff;border:none;transition:background 0.15s" onclick="saveWaterChange()">Salva</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Analisi -->
+<div class="aqua-overlay" id="analysis-overlay" onclick="if(event.target===this)closeAnalysisModal()">
+  <div class="aqua-modal">
+    <div class="modal-handle"></div>
+    <h2 id="analysis-modal-title">Analisi</h2>
+    <div class="analysis-summary" id="analysis-summary" style="display:none"></div>
+    <div class="param-row">
+      <span class="param-label">pH</span>
+      <input type="number" class="param-input" id="ap-ph" placeholder="6.8" step="0.1" min="0" max="14" oninput="updateParamStatus('ph')">
+      <span class="param-status" id="ps-ph"></span>
+    </div>
+    <div class="param-row">
+      <span class="param-label">Ammoniaca</span>
+      <input type="number" class="param-input" id="ap-nh3" placeholder="0.0" step="0.01" min="0" oninput="updateParamStatus('nh3')">
+      <span class="param-unit">mg/L</span>
+      <span class="param-status" id="ps-nh3"></span>
+    </div>
+    <div class="param-row">
+      <span class="param-label">Nitriti</span>
+      <input type="number" class="param-input" id="ap-no2" placeholder="0.0" step="0.01" min="0" oninput="updateParamStatus('no2')">
+      <span class="param-unit">mg/L</span>
+      <span class="param-status" id="ps-no2"></span>
+    </div>
+    <div class="param-row">
+      <span class="param-label">Nitrati</span>
+      <input type="number" class="param-input" id="ap-no3" placeholder="0" step="1" min="0" oninput="updateParamStatus('no3')">
+      <span class="param-unit">mg/L</span>
+      <span class="param-status" id="ps-no3"></span>
+    </div>
+    <button class="btn-save-aqua" onclick="saveAnalysis()">Salva analisi</button>
+    <button class="btn-cancel-aqua" onclick="closeAnalysisModal()">Annulla</button>
   </div>
 </div>
 
@@ -481,6 +832,36 @@
 <div class="hm-tooltip" id="hm-tooltip" style="position:fixed;background:var(--gray-800);color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;pointer-events:none;z-index:200;white-space:nowrap;opacity:0;transition:opacity 0.1s;"></div>
 
 <script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// NAVIGATION
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function goHome() {
+  document.getElementById('home-screen').style.display = '';
+  document.getElementById('plants-screen').classList.remove('visible');
+  document.getElementById('aquarium-screen').classList.remove('visible');
+  document.body.style.background = 'var(--green-50)';
+}
+function showPlants() {
+  document.getElementById('home-screen').style.display = 'none';
+  document.getElementById('plants-screen').classList.add('visible');
+  document.getElementById('aquarium-screen').classList.remove('visible');
+  document.body.style.background = 'var(--green-50)';
+  load(); render(); updateSyncUI();
+}
+function showAquarium() {
+  document.getElementById('home-screen').style.display = 'none';
+  document.getElementById('aquarium-screen').classList.add('visible');
+  document.getElementById('plants-screen').classList.remove('visible');
+  document.body.style.background = 'var(--blue-50)';
+  aquaLoad();
+  renderWaterChanges();
+  renderFertAquaGrid();
+  renderAnalysisGrid();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// PLANTS CODE (unchanged)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const CLIENT_ID = '595278972600-5nh69ar36qse8puiqghieu5561ult80b.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
 const STORAGE_KEY = 'piante-v1';
@@ -494,17 +875,12 @@ let accessToken = null;
 let driveFileId = null;
 let googleUser = null;
 
-// --- Local storage ---
 function load() {
   try { plants = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { plants = []; }
   try { accessToken = localStorage.getItem('gd_token') || null; } catch(e) {}
   try { googleUser = JSON.parse(localStorage.getItem('gd_user') || 'null'); } catch(e) {}
 }
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(plants));
-}
-
-// --- Helpers ---
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(plants)); }
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,5); }
 function daysSince(iso) {
   if (!iso) return null;
@@ -535,7 +911,6 @@ function getProgress(p) {
   return { pct, cls: pct >= 110 ? 'overdue' : pct >= 75 ? 'urgent' : '' };
 }
 
-// --- Render ---
 function render() {
   const list = document.getElementById('plant-list');
   const sub = document.getElementById('subtitle');
@@ -543,7 +918,6 @@ function render() {
   sub.textContent = plants.length === 0
     ? 'nessuna pianta'
     : `${plants.length} pianta${plants.length>1?'e':''}${overdue ? ` · ${overdue} da innaffiare` : ''}`;
-
   if (plants.length === 0) {
     list.innerHTML = `<div class="empty-state"><span class="empty-icon">🌿</span><h2>Nessuna pianta ancora</h2><p>Tocca il <strong>+</strong> per aggiungere la tua prima pianta.</p></div>`;
     return;
@@ -607,40 +981,32 @@ function render() {
   }).join('');
 }
 
-// --- Actions ---
 function waterPlant(id) {
   const p = plants.find(x => x.id === id);
   if (!p) return;
   if (p.lastWatered && daysSince(p.lastWatered) === 0) {
     p.lastWatered = (p.history||[]).slice(-2,-1)[0] || null;
     p.history = (p.history||[]).slice(0,-1);
-    save(); render();
-    showToast(`${p.emoji||'🌱'} ${p.name} rimossa da oggi`);
+    save(); render(); showToast(`${p.emoji||'🌱'} ${p.name} rimossa da oggi`);
   } else {
     const now = new Date().toISOString();
-    p.lastWatered = now;
-    p.history = [...(p.history||[]), now].slice(-10);
-    save(); render();
-    showToast(`${p.emoji||'🌱'} ${p.name} innaffiata!`);
+    p.lastWatered = now; p.history = [...(p.history||[]), now].slice(-10);
+    save(); render(); showToast(`${p.emoji||'🌱'} ${p.name} innaffiata!`);
   }
 }
-
 function fertilizePlant(id) {
   const p = plants.find(x => x.id === id);
   if (!p) return;
   const todayFert = (p.fertHistory||[]).some(h => daysSince(h) === 0);
   if (todayFert) {
     p.fertHistory = (p.fertHistory||[]).filter(h => daysSince(h) !== 0);
-    save(); render();
-    showToast(`${p.emoji||'🌱'} ${p.name} concimazione rimossa da oggi`);
+    save(); render(); showToast(`${p.emoji||'🌱'} ${p.name} concimazione rimossa`);
   } else {
     const now = new Date().toISOString();
     p.fertHistory = [...(p.fertHistory||[]), now].slice(-20);
-    save(); render();
-    showToast(`${p.emoji||'🌱'} ${p.name} concimata!`);
+    save(); render(); showToast(`${p.emoji||'🌱'} ${p.name} concimata!`);
   }
 }
-
 function deletePlant(id) {
   const p = plants.find(x => x.id === id);
   if (!p) return;
@@ -649,10 +1015,7 @@ function deletePlant(id) {
   save(); render();
   showToast(`${p.emoji||'🌱'} ${p.name} eliminata`, () => { plants = snapshot; save(); render(); });
 }
-
 function editPlant(id) { openModal(id); }
-
-// --- Modal ---
 function selectEmoji(btn) {
   document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
@@ -701,25 +1064,16 @@ function savePlant() {
   if (editingId) {
     const p = plants.find(x => x.id === editingId);
     p.name = name; p.species = species; p.freq = freq; p.emoji = selectedEmoji;
-    // history already updated live by renderHistoryEditor toggles
-    p.lastWatered = p.history && p.history.length > 0
-      ? [...p.history].sort().slice(-1)[0] : null;
-    // fertHistory already kept in sync via syncEditingHistoryToPlant
+    p.lastWatered = p.history && p.history.length > 0 ? [...p.history].sort().slice(-1)[0] : null;
   } else {
     const lwVal = document.getElementById('inp-last-watered').value;
     let lastWatered = null, history = [];
-    if (lwVal) {
-      lastWatered = new Date(lwVal + 'T12:00:00').toISOString();
-      history = [lastWatered];
-    }
+    if (lwVal) { lastWatered = new Date(lwVal + 'T12:00:00').toISOString(); history = [lastWatered]; }
     plants.push({ id: uid(), name, species, freq, emoji: selectedEmoji, lastWatered, history });
   }
   save(); closeModal(); render();
 }
 
-// --- Shared calendar grid builder ---
-// type: 'water' | 'fert'
-// plantId: if set, uses card toggle (saves immediately); if null, uses modal toggle
 function buildMonthGrid(year, month, markedSet, editable, type, plantId) {
   const now = new Date(); now.setHours(0,0,0,0);
   const isCurrentMonth = year === now.getFullYear() && month === now.getMonth();
@@ -728,7 +1082,6 @@ function buildMonthGrid(year, month, markedSet, editable, type, plantId) {
   const startOffset = (firstDow + 6) % 7;
   const dayNames = ['L','M','M','G','V','S','D'];
   const markedClass = type === 'fert' ? 'fertilized' : 'watered';
-  // Card uses card-specific toggle; modal uses modal toggle
   const toggleFn = plantId
     ? (type === 'fert' ? `toggleCardFertDay('${plantId}',` : `toggleCardWaterDay('${plantId}',`)
     : (type === 'fert' ? 'toggleFertDay(' : 'toggleWaterDay(');
@@ -742,51 +1095,34 @@ function buildMonthGrid(year, month, markedSet, editable, type, plantId) {
     const isMarked = markedSet.has(day);
     let cls = 'heatmap-cell';
     if (isFuture) { cls += ' future'; }
-    else {
-      if (isMarked) cls += ' ' + markedClass;
-      if (editable) cls += ' editable';
-    }
+    else { if (isMarked) cls += ' ' + markedClass; if (editable) cls += ' editable'; }
     if (isToday) cls += ' today';
-    const onclick = (editable && !isFuture)
-      ? ` onclick="${toggleFn}${year},${month},${day},this)"`
-      : '';
+    const onclick = (editable && !isFuture) ? ` onclick="${toggleFn}${year},${month},${day},this)"` : '';
     cells += `<div class="${cls}"${onclick}><span class="heatmap-cell-num">${day}</span></div>`;
   }
   return `<div class="heatmap-grid">${cells}</div>`;
 }
-
-// helper: build Set of days from ISO list for a given year/month
 function daysSetForMonth(isoList, year, month) {
   const s = new Set();
-  isoList.forEach(iso => {
-    const d = new Date(iso);
-    if (d.getFullYear() === year && d.getMonth() === month) s.add(d.getDate());
-  });
+  isoList.forEach(iso => { const d = new Date(iso); if (d.getFullYear()===year && d.getMonth()===month) s.add(d.getDate()); });
   return s;
 }
 
-// ── Card calendars (collapsible, navigable, read-only on card) ─────────────
-const cardMonthOffset = {}; // key: 'water-ID' | 'fert-ID'
-
+const cardMonthOffset = {};
 function toggleHeatmap(type, plantId, btn) {
   const panelId = 'heatmap-panel-' + type + '-' + plantId;
   const panel = document.getElementById(panelId);
   const arrow = btn.querySelector('.heatmap-toggle-arrow');
   const isOpen = panel.classList.contains('open');
   if (isOpen) {
-    panel.classList.remove('open');
-    arrow.classList.remove('open');
-    btn.setAttribute('aria-expanded', 'false');
+    panel.classList.remove('open'); arrow.classList.remove('open'); btn.setAttribute('aria-expanded','false');
   } else {
     const key = type + '-' + plantId;
     if (cardMonthOffset[key] === undefined) cardMonthOffset[key] = 0;
     renderCardCalendar(type, plantId);
-    panel.classList.add('open');
-    arrow.classList.add('open');
-    btn.setAttribute('aria-expanded', 'true');
+    panel.classList.add('open'); arrow.classList.add('open'); btn.setAttribute('aria-expanded','true');
   }
 }
-
 function renderCardCalendar(type, plantId) {
   const p = plants.find(x => x.id === plantId);
   if (!p) return;
@@ -797,181 +1133,123 @@ function renderCardCalendar(type, plantId) {
   const year = td.getFullYear(), month = td.getMonth();
   const monthName = td.toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
   const isCurrent = offset === 0;
-
-  let isoList;
-  if (type === 'water') {
-    isoList = [...(p.history || [])];
-    if (p.lastWatered && !isoList.includes(p.lastWatered)) isoList.push(p.lastWatered);
-  } else {
-    isoList = [...(p.fertHistory || [])];
-  }
+  const isoList = type === 'fert' ? (p.fertHistory || []) : [...(p.history||[]), p.lastWatered].filter(Boolean);
   const markedSet = daysSetForMonth(isoList, year, month);
   const grid = buildMonthGrid(year, month, markedSet, true, type, plantId);
-
   document.getElementById('heatmap-content-' + type + '-' + plantId).innerHTML = `
     <div class="heatmap-nav">
       <button class="heatmap-nav-btn" onclick="shiftCardCalendar('${type}','${plantId}',-1)">‹</button>
       <span class="heatmap-month-title">${monthName}</span>
-      <button class="heatmap-nav-btn" onclick="shiftCardCalendar('${type}','${plantId}',1)" ${isCurrent ? 'disabled' : ''}>›</button>
-    </div>
-    ${grid}`;
+      <button class="heatmap-nav-btn" onclick="shiftCardCalendar('${type}','${plantId}',1)" ${isCurrent?'disabled':''}>›</button>
+    </div>${grid}`;
 }
-
 function shiftCardCalendar(type, plantId, delta) {
   const key = type + '-' + plantId;
   cardMonthOffset[key] = (cardMonthOffset[key] || 0) + delta;
   renderCardCalendar(type, plantId);
 }
 
-// ── Modal editors ──────────────────────────────────────────────────────────
-let editingWaterHistory = [];
-let editingFertHistory  = [];
-let editingWaterOffset  = 0;
-let editingFertOffset   = 0;
-
+let editingWaterHistory = [], editingFertHistory = [], editingWaterOffset = 0, editingFertOffset = 0;
 function renderHistoryEditor(plant) {
   editingWaterHistory = [...(plant.history || [])];
-  if (plant.lastWatered && !editingWaterHistory.includes(plant.lastWatered))
-    editingWaterHistory.push(plant.lastWatered);
+  if (plant.lastWatered && !editingWaterHistory.includes(plant.lastWatered)) editingWaterHistory.push(plant.lastWatered);
   editingFertHistory = [...(plant.fertHistory || [])];
-  editingWaterOffset = 0;
-  editingFertOffset  = 0;
-  renderModalCalendar('water');
-  renderModalCalendar('fert');
+  editingWaterOffset = 0; editingFertOffset = 0;
+  renderModalCalendar('water'); renderModalCalendar('fert');
   syncEditingHistoryToPlant();
 }
-
 function renderModalCalendar(type) {
-  const offset   = type === 'fert' ? editingFertOffset : editingWaterOffset;
-  const isoList  = type === 'fert' ? editingFertHistory : editingWaterHistory;
-  const containerId = type === 'fert' ? 'fertilizer-heatmap-container' : 'history-heatmap-container';
-
+  const offset = type==='fert' ? editingFertOffset : editingWaterOffset;
+  const isoList = type==='fert' ? editingFertHistory : editingWaterHistory;
+  const containerId = type==='fert' ? 'fertilizer-heatmap-container' : 'history-heatmap-container';
   const now = new Date();
-  const td  = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+  const td = new Date(now.getFullYear(), now.getMonth() + offset, 1);
   const year = td.getFullYear(), month = td.getMonth();
   const monthName = td.toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
   const isCurrent = offset === 0;
-
   const markedSet = daysSetForMonth(isoList, year, month);
   const grid = buildMonthGrid(year, month, markedSet, true, type);
-
   document.getElementById(containerId).innerHTML = `
     <div class="heatmap-nav">
       <button class="heatmap-nav-btn" onclick="shiftModalCalendar('${type}',-1)">‹</button>
       <span class="heatmap-month-title">${monthName}</span>
-      <button class="heatmap-nav-btn" onclick="shiftModalCalendar('${type}',1)" ${isCurrent ? 'disabled' : ''}>›</button>
-    </div>
-    ${grid}`;
+      <button class="heatmap-nav-btn" onclick="shiftModalCalendar('${type}',1)" ${isCurrent?'disabled':''}>›</button>
+    </div>${grid}`;
 }
-
 function shiftModalCalendar(type, delta) {
-  if (type === 'fert') editingFertOffset += delta;
-  else editingWaterOffset += delta;
+  if (type==='fert') editingFertOffset += delta; else editingWaterOffset += delta;
   renderModalCalendar(type);
 }
-
 function toggleWaterDay(year, month, day, el) {
   const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-  const idx = editingWaterHistory.findIndex(h => h.slice(0,10) === key);
-  if (idx >= 0) { editingWaterHistory.splice(idx, 1); el.classList.remove('watered'); }
-  else { editingWaterHistory.push(new Date(year, month, day, 12, 0, 0).toISOString()); el.classList.add('watered'); }
+  const idx = editingWaterHistory.findIndex(h => h.slice(0,10)===key);
+  if (idx>=0) { editingWaterHistory.splice(idx,1); el.classList.remove('watered'); }
+  else { editingWaterHistory.push(new Date(year,month,day,12,0,0).toISOString()); el.classList.add('watered'); }
   syncEditingHistoryToPlant();
 }
-
 function toggleFertDay(year, month, day, el) {
   const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-  const idx = editingFertHistory.findIndex(h => h.slice(0,10) === key);
-  if (idx >= 0) { editingFertHistory.splice(idx, 1); el.classList.remove('fertilized'); }
-  else { editingFertHistory.push(new Date(year, month, day, 12, 0, 0).toISOString()); el.classList.add('fertilized'); }
+  const idx = editingFertHistory.findIndex(h => h.slice(0,10)===key);
+  if (idx>=0) { editingFertHistory.splice(idx,1); el.classList.remove('fertilized'); }
+  else { editingFertHistory.push(new Date(year,month,day,12,0,0).toISOString()); el.classList.add('fertilized'); }
   syncEditingHistoryToPlant();
 }
-
 function syncEditingHistoryToPlant() {
   if (!editingId) return;
   const p = plants.find(x => x.id === editingId);
   if (!p) return;
-  p.history     = [...editingWaterHistory].sort();
+  p.history = [...editingWaterHistory].sort();
   p.fertHistory = [...editingFertHistory].sort();
   p.lastWatered = p.history.length > 0 ? p.history.slice(-1)[0] : null;
 }
-
-// ── Card-level toggles (edit directly on card, persist immediately) ────────
 function toggleCardWaterDay(plantId, year, month, day, el) {
   const p = plants.find(x => x.id === plantId);
   if (!p) return;
   const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-  const arr = [...(p.history || [])];
+  const arr = [...(p.history||[])];
   if (p.lastWatered && !arr.includes(p.lastWatered)) arr.push(p.lastWatered);
-  const idx = arr.findIndex(h => h.slice(0,10) === key);
-  if (idx >= 0) { arr.splice(idx, 1); el.classList.remove('watered'); }
-  else { arr.push(new Date(year, month, day, 12, 0, 0).toISOString()); el.classList.add('watered'); }
+  const idx = arr.findIndex(h => h.slice(0,10)===key);
+  if (idx>=0) { arr.splice(idx,1); el.classList.remove('watered'); }
+  else { arr.push(new Date(year,month,day,12,0,0).toISOString()); el.classList.add('watered'); }
   p.history = arr.sort();
-  p.lastWatered = p.history.length > 0 ? p.history.slice(-1)[0] : null;
-  save();
-  // Refresh only status parts without full re-render (preserve open panel)
-  refreshCardStatus(plantId);
+  p.lastWatered = p.history.length>0 ? p.history.slice(-1)[0] : null;
+  save(); refreshCardStatus(plantId);
 }
-
 function toggleCardFertDay(plantId, year, month, day, el) {
   const p = plants.find(x => x.id === plantId);
   if (!p) return;
   const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-  const arr = [...(p.fertHistory || [])];
-  const idx = arr.findIndex(h => h.slice(0,10) === key);
-  if (idx >= 0) { arr.splice(idx, 1); el.classList.remove('fertilized'); }
-  else { arr.push(new Date(year, month, day, 12, 0, 0).toISOString()); el.classList.add('fertilized'); }
-  p.fertHistory = arr.sort();
-  save();
+  const arr = [...(p.fertHistory||[])];
+  const idx = arr.findIndex(h => h.slice(0,10)===key);
+  if (idx>=0) { arr.splice(idx,1); el.classList.remove('fertilized'); }
+  else { arr.push(new Date(year,month,day,12,0,0).toISOString()); el.classList.add('fertilized'); }
+  p.fertHistory = arr.sort(); save();
 }
-
 function refreshCardStatus(plantId) {
   const p = plants.find(x => x.id === plantId);
   if (!p) return;
   const card = document.querySelector(`.plant-card[data-id="${plantId}"]`);
   if (!card) return;
-  const st = getStatus(p);
-  const pr = getProgress(p);
-  const ds = daysSince(p.lastWatered);
-  // Update left border color
-  card.className = `plant-card ${st.card}`;
-  card.setAttribute('data-id', plantId);
-  // Update last-watered label
+  const st = getStatus(p); const pr = getProgress(p); const ds = daysSince(p.lastWatered);
+  card.className = `plant-card ${st.card}`; card.setAttribute('data-id', plantId);
   const lastLabel = p.lastWatered
-    ? `<strong>${formatDate(p.lastWatered)}</strong>` + (ds > 0 ? ` <span style="color:var(--gray-400);font-size:12px">(${ds}g fa)</span>` : '')
+    ? `<strong>${formatDate(p.lastWatered)}</strong>` + (ds>0?` <span style="color:var(--gray-400);font-size:12px">(${ds}g fa)</span>`:'')
     : '<span style="color:var(--gray-400)">mai</span>';
-  const wl = card.querySelector('.water-last');
-  if (wl) wl.innerHTML = 'Ultima volta: ' + lastLabel;
-  // Update badge
-  const badge = card.querySelector('.status-badge');
-  if (badge) { badge.className = `status-badge ${st.badge}`; badge.textContent = st.label; }
-  // Update progress bar
-  const pb = card.querySelector('.progress-bar');
-  if (pb) { pb.className = `progress-bar ${pr.cls}`; pb.style.width = pr.pct + '%'; }
-  // Update water button
+  const wl = card.querySelector('.water-last'); if (wl) wl.innerHTML = 'Ultima volta: ' + lastLabel;
+  const badge = card.querySelector('.status-badge'); if (badge) { badge.className=`status-badge ${st.badge}`; badge.textContent=st.label; }
+  const pb = card.querySelector('.progress-bar'); if (pb) { pb.className=`progress-bar ${pr.cls}`; pb.style.width=pr.pct+'%'; }
   const wb = card.querySelector('.btn-water');
-  if (wb) {
-    const todayWatered = p.lastWatered && daysSince(p.lastWatered) === 0;
-    wb.className = 'btn-water' + (todayWatered ? ' watered' : '');
-    wb.innerHTML = '💧 ' + (todayWatered ? 'Innaffiata oggi ✓' : 'Innaffia ora');
-  }
-  // Update fertilize button
+  if (wb) { const tw=p.lastWatered&&daysSince(p.lastWatered)===0; wb.className='btn-water'+(tw?' watered':''); wb.innerHTML='💧 '+(tw?'Innaffiata oggi ✓':'Innaffia ora'); }
   const fb = card.querySelector('.btn-fertilize');
-  if (fb) {
-    const todayFert = (p.fertHistory||[]).some(h => daysSince(h) === 0);
-    fb.className = 'btn-fertilize' + (todayFert ? ' fertilized' : '');
-    fb.innerHTML = '🌿 ' + (todayFert ? 'Concimata oggi ✓' : 'Concima oggi');
-  }
+  if (fb) { const tf=(p.fertHistory||[]).some(h=>daysSince(h)===0); fb.className='btn-fertilize'+(tf?' fertilized':''); fb.innerHTML='🌿 '+(tf?'Concimata oggi ✓':'Concima oggi'); }
 }
 
-// --- Toast ---
 let toastTimer = null;
 function showToast(msg, undoFn) {
-  const t = document.getElementById('toast');
-  const m = document.getElementById('toast-msg');
+  const t = document.getElementById('toast'); const m = document.getElementById('toast-msg');
   if (toastTimer) clearTimeout(toastTimer);
   m.textContent = msg;
-  const old = t.querySelector('.toast-undo');
-  if (old) old.remove();
+  const old = t.querySelector('.toast-undo'); if (old) old.remove();
   if (undoFn) {
     const btn = document.createElement('button');
     btn.className = 'toast-undo'; btn.textContent = 'Annulla';
@@ -982,48 +1260,35 @@ function showToast(msg, undoFn) {
   toastTimer = setTimeout(hideToast, 4000);
 }
 function hideToast() {
-  const t = document.getElementById('toast');
-  t.classList.remove('show');
-  const btn = t.querySelector('.toast-undo');
-  if (btn) setTimeout(() => btn.remove(), 300);
+  const t = document.getElementById('toast'); t.classList.remove('show');
+  const btn = t.querySelector('.toast-undo'); if (btn) setTimeout(() => btn.remove(), 300);
 }
 
-// =====================
-// GOOGLE DRIVE SYNC
-// =====================
-
+// Drive
 function updateSyncUI() {
   const dot = document.getElementById('sync-dot');
   const lbl = document.getElementById('sync-label');
   const btn = document.getElementById('btn-sync');
+  if (!dot) return;
   if (accessToken && googleUser) {
-    dot.className = 'sync-dot on';
-    lbl.textContent = googleUser.name ? googleUser.name.split(' ')[0] : 'Drive';
+    dot.className = 'sync-dot on'; lbl.textContent = googleUser.name ? googleUser.name.split(' ')[0] : 'Drive';
     btn.className = 'btn-sync connected';
   } else {
-    dot.className = 'sync-dot';
-    lbl.textContent = 'Drive';
-    btn.className = 'btn-sync';
+    dot.className = 'sync-dot'; lbl.textContent = 'Drive'; btn.className = 'btn-sync';
   }
 }
-
 function openDrivePanel() {
   const content = document.getElementById('drive-content');
   if (accessToken && googleUser) {
-    const avatarHtml = googleUser.picture
-      ? `<img src="${googleUser.picture}" alt="">`
-      : `<span>${(googleUser.name||'?')[0]}</span>`;
+    const avatarHtml = googleUser.picture ? `<img src="${googleUser.picture}" alt="">` : `<span>${(googleUser.name||'?')[0]}</span>`;
     content.innerHTML = `
       <div class="drive-user">
         <div class="drive-avatar">${avatarHtml}</div>
-        <div>
-          <div class="drive-name">${googleUser.name || 'Utente Google'}</div>
-          <div class="drive-email">${googleUser.email || ''}</div>
-        </div>
+        <div><div class="drive-name">${googleUser.name||'Utente Google'}</div><div class="drive-email">${googleUser.email||''}</div></div>
       </div>
       <div class="drive-actions">
         <button class="btn-drive btn-drive-upload" onclick="driveUpload()">☁️ Salva su Drive</button>
-        <p class="drive-hint">Sovrascrive il backup su Drive con i dati attuali del telefono.</p>
+        <p class="drive-hint">Sovrascrive il backup su Drive con i dati attuali.</p>
         <div class="drive-sep"></div>
         <button class="btn-drive btn-drive-download" onclick="driveDownload()">📥 Carica da Drive</button>
         <p class="drive-hint">Sostituisce i dati attuali con quelli salvati su Drive.</p>
@@ -1033,165 +1298,371 @@ function openDrivePanel() {
   } else {
     content.innerHTML = `
       <h2 style="margin-bottom:0.75rem">Sincronizza con Drive</h2>
-      <p style="font-size:14px;color:var(--gray-600);line-height:1.6;margin-bottom:1.25rem">
-        Collegando il tuo Google Account puoi salvare le piante su Drive e recuperarle su qualsiasi dispositivo.
-      </p>
+      <p style="font-size:14px;color:var(--gray-600);line-height:1.6;margin-bottom:1.25rem">Collegando il tuo Google Account puoi salvare le piante su Drive.</p>
       <div class="drive-actions">
         <button class="btn-drive btn-drive-upload" onclick="driveLogin()" style="gap:10px">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#fff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#fff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fff" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#fff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Accedi con Google
         </button>
-        <p class="drive-hint">I tuoi dati vengono salvati in una cartella privata dell'app su Drive, non visibile ad altre app.</p>
+        <p class="drive-hint">I tuoi dati vengono salvati in una cartella privata su Drive.</p>
       </div>`;
   }
   document.getElementById('drive-overlay').classList.add('open');
 }
-
 function closeDrivePanel() { document.getElementById('drive-overlay').classList.remove('open'); }
-function handleDriveOverlayClick(e) { if (e.target === document.getElementById('drive-overlay')) closeDrivePanel(); }
-
-function driveLogin() {
-  if (!tokenClient) {
-    showToast('⚠️ Google non ancora caricato, riprova');
-    return;
-  }
-  tokenClient.requestAccessToken({ prompt: 'consent' });
-}
-
+function handleDriveOverlayClick(e) { if (e.target===document.getElementById('drive-overlay')) closeDrivePanel(); }
+function driveLogin() { if (!tokenClient) { showToast('⚠️ Google non ancora caricato'); return; } tokenClient.requestAccessToken({ prompt: 'consent' }); }
 function driveLogout() {
   if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
-  accessToken = null; googleUser = null; driveFileId = null;
-  localStorage.removeItem('gd_token');
-  localStorage.removeItem('gd_user');
-  updateSyncUI(); closeDrivePanel();
-  showToast('Account disconnesso');
+  accessToken=null; googleUser=null; driveFileId=null;
+  localStorage.removeItem('gd_token'); localStorage.removeItem('gd_user');
+  updateSyncUI(); closeDrivePanel(); showToast('Account disconnesso');
 }
-
 async function driveUpload() {
-  if (!accessToken) return;
-  setSyncing(true);
-  closeDrivePanel();
+  if (!accessToken) return; setSyncing(true); closeDrivePanel();
   try {
     const data = JSON.stringify(plants);
     if (!driveFileId) driveFileId = await findDriveFile();
-    if (driveFileId) {
-      await updateDriveFile(driveFileId, data);
-    } else {
-      driveFileId = await createDriveFile(data);
-    }
+    if (driveFileId) await updateDriveFile(driveFileId, data);
+    else driveFileId = await createDriveFile(data);
     showToast('☁️ Salvato su Drive!');
   } catch(e) {
-    if (e.status === 401) { accessToken = null; updateSyncUI(); showToast('Sessione scaduta, riconnettiti'); }
+    if (e.status===401) { accessToken=null; updateSyncUI(); showToast('Sessione scaduta, riconnettiti'); }
     else showToast('Errore durante il salvataggio');
   }
   setSyncing(false);
 }
-
 async function driveDownload() {
-  if (!accessToken) return;
-  setSyncing(true);
-  closeDrivePanel();
+  if (!accessToken) return; setSyncing(true); closeDrivePanel();
   try {
     if (!driveFileId) driveFileId = await findDriveFile();
     if (!driveFileId) { showToast('Nessun backup trovato su Drive'); setSyncing(false); return; }
     const data = await readDriveFile(driveFileId);
     const imported = JSON.parse(data);
-    if (Array.isArray(imported)) {
-      plants = imported;
-      save(); render();
-      showToast(`📥 Caricate ${plants.length} piante da Drive`);
-    }
+    if (Array.isArray(imported)) { plants=imported; save(); render(); showToast(`📥 Caricate ${plants.length} piante`); }
   } catch(e) {
-    if (e.status === 401) { accessToken = null; updateSyncUI(); showToast('Sessione scaduta, riconnettiti'); }
+    if (e.status===401) { accessToken=null; updateSyncUI(); showToast('Sessione scaduta, riconnettiti'); }
     else showToast('Errore durante il caricamento');
   }
   setSyncing(false);
 }
-
 function setSyncing(on) {
-  const dot = document.getElementById('sync-dot');
-  const btn = document.getElementById('btn-sync');
-  if (on) { dot.className = 'sync-dot spinning'; btn.classList.add('syncing'); }
+  const dot=document.getElementById('sync-dot'); const btn=document.getElementById('btn-sync');
+  if (on) { dot.className='sync-dot spinning'; btn.classList.add('syncing'); }
   else { updateSyncUI(); btn.classList.remove('syncing'); }
 }
-
-// Drive API calls
 async function findDriveFile() {
   const res = await gfetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${DRIVE_FILE_NAME}'&fields=files(id)`);
   const json = await res.json();
   if (!res.ok) throw { status: res.status };
-  return json.files && json.files.length > 0 ? json.files[0].id : null;
+  return json.files && json.files.length>0 ? json.files[0].id : null;
 }
-
 async function createDriveFile(data) {
   const meta = { name: DRIVE_FILE_NAME, parents: ['appDataFolder'] };
   const form = new FormData();
   form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
   form.append('file', new Blob([data], { type: 'application/json' }));
-  const res = await gfetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', { method: 'POST', body: form });
+  const res = await gfetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', { method:'POST', body:form });
   if (!res.ok) throw { status: res.status };
-  const json = await res.json();
-  return json.id;
+  const json = await res.json(); return json.id;
 }
-
 async function updateDriveFile(fileId, data) {
-  const res = await gfetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
-    method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: data
-  });
+  const res = await gfetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body:data });
   if (!res.ok) throw { status: res.status };
 }
-
 async function readDriveFile(fileId) {
   const res = await gfetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`);
   if (!res.ok) throw { status: res.status };
   return res.text();
 }
-
-function gfetch(url, opts = {}) {
+function gfetch(url, opts={}) {
   opts.headers = opts.headers || {};
   opts.headers['Authorization'] = `Bearer ${accessToken}`;
   return fetch(url, opts);
 }
-
-// Google Identity Services init
 window.addEventListener('load', () => {
   const interval = setInterval(() => {
-    if (typeof google === 'undefined' || !google.accounts) return;
+    if (typeof google==='undefined' || !google.accounts) return;
     clearInterval(interval);
-
     tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID,
-      scope: SCOPES,
+      client_id: CLIENT_ID, scope: SCOPES,
       callback: async (resp) => {
         if (resp.error) { showToast('Accesso negato'); return; }
         accessToken = resp.access_token;
         localStorage.setItem('gd_token', accessToken);
-        // Fetch user info
         try {
-          const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-            headers: { Authorization: `Bearer ${accessToken}` }
-          });
+          const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: `Bearer ${accessToken}` } });
           const u = await r.json();
           googleUser = { name: u.name, email: u.email, picture: u.picture };
           localStorage.setItem('gd_user', JSON.stringify(googleUser));
         } catch(e) { googleUser = {}; }
-        updateSyncUI();
-        showToast('✅ Connesso a Google Drive!');
-        // Auto-find file
+        updateSyncUI(); showToast('✅ Connesso a Google Drive!');
         try { driveFileId = await findDriveFile(); } catch(e) {}
       }
     });
-
-    // Restore session silently if token still present
-    if (accessToken) {
-      updateSyncUI();
-      findDriveFile().then(id => { driveFileId = id; }).catch(() => {});
-    }
+    if (accessToken) { updateSyncUI(); findDriveFile().then(id=>{driveFileId=id;}).catch(()=>{}); }
   }, 200);
 });
 
-// --- Init ---
-load(); render(); updateSyncUI();
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// AQUARIUM CODE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const AQUA_KEY = 'acquario-v1';
+let aquaData = { waterChanges: [], fertData: {}, analysisData: {} };
+
+function aquaLoad() {
+  try { aquaData = JSON.parse(localStorage.getItem(AQUA_KEY)) || { waterChanges:[], fertData:{}, analysisData:{} }; }
+  catch(e) { aquaData = { waterChanges:[], fertData:{}, analysisData:{} }; }
+  if (!aquaData.waterChanges) aquaData.waterChanges = [];
+  if (!aquaData.fertData) aquaData.fertData = {};
+  if (!aquaData.analysisData) aquaData.analysisData = {};
+}
+function aquaSave() { localStorage.setItem(AQUA_KEY, JSON.stringify(aquaData)); }
+
+// ─── CAMBI D'ACQUA ───
+function renderWaterChanges() {
+  const list = document.getElementById('wc-list');
+  const card = document.getElementById('wc-list-card');
+  const wcs = [...aquaData.waterChanges].sort((a,b) => b.date.localeCompare(a.date));
+  if (wcs.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = '';
+  list.innerHTML = wcs.map((wc, i) => {
+    const d = new Date(wc.date);
+    const label = d.toLocaleDateString('it-IT', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
+    const today = new Date(); today.setHours(0,0,0,0);
+    const diffDays = Math.round((today - new Date(wc.date + 'T12:00:00')) / 86400000);
+    const diffLabel = diffDays === 0 ? 'oggi' : diffDays === 1 ? 'ieri' : `${diffDays} giorni fa`;
+    const pctLabel = wc.pct ? ` · ${wc.pct}%` : '';
+    const noteHtml = wc.note ? `<div style="font-size:12px;color:var(--gray-400);margin-top:2px">${wc.note}</div>` : '';
+    return `<div class="water-change-row">
+      <div>
+        <div class="water-change-date">💧 ${label}${pctLabel}</div>
+        ${noteHtml}
+        <div class="water-change-days">${diffLabel}</div>
+      </div>
+      <button class="btn-icon" onclick="deleteWaterChange(${i})" style="color:var(--gray-300)">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+function openWaterChangeModal() {
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('wc-date').value = today;
+  document.getElementById('wc-pct').value = '';
+  document.getElementById('wc-note').value = '';
+  document.getElementById('wc-overlay').classList.add('open');
+}
+function closeWaterChangeModal() { document.getElementById('wc-overlay').classList.remove('open'); }
+function saveWaterChange() {
+  const date = document.getElementById('wc-date').value;
+  if (!date) { document.getElementById('wc-date').focus(); return; }
+  const pct = document.getElementById('wc-pct').value;
+  const note = document.getElementById('wc-note').value.trim();
+  aquaData.waterChanges.push({ date, pct: pct ? parseInt(pct) : null, note });
+  aquaSave(); closeWaterChangeModal(); renderWaterChanges();
+  showToast('💧 Cambio d\'acqua registrato!');
+}
+function deleteWaterChange(idx) {
+  const sorted = [...aquaData.waterChanges].sort((a,b) => b.date.localeCompare(a.date));
+  const item = sorted[idx];
+  const realIdx = aquaData.waterChanges.findIndex(w => w.date===item.date && w.note===item.note);
+  if (realIdx >= 0) aquaData.waterChanges.splice(realIdx, 1);
+  aquaSave(); renderWaterChanges();
+}
+
+// ─── FERTILIZZANTE (calendario con 3 stati) ───
+let fertAquaMonthOffset = 0;
+
+function renderFertAquaGrid() {
+  const now = new Date();
+  const td = new Date(now.getFullYear(), now.getMonth() + fertAquaMonthOffset, 1);
+  const year = td.getFullYear(), month = td.getMonth();
+  const monthName = td.toLocaleDateString('it-IT', { month:'long', year:'numeric' });
+  document.getElementById('fert-aqua-month-title').textContent = monthName;
+  document.getElementById('fert-aqua-next-btn').disabled = fertAquaMonthOffset >= 0;
+
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const firstDow = new Date(year, month, 1).getDay();
+  const startOffset = (firstDow + 6) % 7;
+  const dayNames = ['L','M','M','G','V','S','D'];
+  const isCurrentMonth = fertAquaMonthOffset === 0;
+
+  let html = dayNames.map(d => `<div class="fert-aqua-head">${d}</div>`).join('');
+  for (let i = 0; i < startOffset; i++) html += `<div class="fert-aqua-cell empty"></div>`;
+  const todayDate = now.getDate();
+  for (let day = 1; day <= daysInMonth; day++) {
+    const thisDate = new Date(year, month, day);
+    const isFuture = thisDate > now;
+    const isToday = isCurrentMonth && day === todayDate;
+    const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const state = aquaData.fertData[key] || 0; // 0=none,1=tabs,2=liquid
+    let cls = 'fert-aqua-cell';
+    if (isFuture) cls += ' future';
+    else {
+      if (state === 1) cls += ' tabs';
+      else if (state === 2) cls += ' liquid';
+    }
+    if (isToday) cls += ' today';
+    const onclick = isFuture ? '' : ` onclick="cycleFertAqua('${key}',this)"`;
+    html += `<div class="${cls}"${onclick}><span class="fert-aqua-num">${day}</span></div>`;
+  }
+  document.getElementById('fert-aqua-grid').innerHTML = html;
+}
+
+function cycleFertAqua(key, el) {
+  const cur = aquaData.fertData[key] || 0;
+  const next = (cur + 1) % 3;
+  if (next === 0) delete aquaData.fertData[key];
+  else aquaData.fertData[key] = next;
+  // update class
+  el.classList.remove('tabs','liquid');
+  if (next === 1) el.classList.add('tabs');
+  else if (next === 2) el.classList.add('liquid');
+  aquaSave();
+}
+
+function shiftFertAquaMonth(delta) {
+  fertAquaMonthOffset = Math.min(0, fertAquaMonthOffset + delta);
+  renderFertAquaGrid();
+}
+
+// ─── ANALISI ───
+let analysisMonthOffset = 0;
+let analysisModalDateKey = null;
+
+function renderAnalysisGrid() {
+  const now = new Date();
+  const td = new Date(now.getFullYear(), now.getMonth() + analysisMonthOffset, 1);
+  const year = td.getFullYear(), month = td.getMonth();
+  const monthName = td.toLocaleDateString('it-IT', { month:'long', year:'numeric' });
+  document.getElementById('analysis-month-title').textContent = monthName;
+  document.getElementById('analysis-next-btn').disabled = analysisMonthOffset >= 0;
+
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const firstDow = new Date(year, month, 1).getDay();
+  const startOffset = (firstDow + 6) % 7;
+  const dayNames = ['L','M','M','G','V','S','D'];
+  const isCurrentMonth = analysisMonthOffset === 0;
+  const todayDate = now.getDate();
+
+  let html = dayNames.map(d => `<div class="analysis-head">${d}</div>`).join('');
+  for (let i = 0; i < startOffset; i++) html += `<div class="analysis-cell empty"></div>`;
+  for (let day = 1; day <= daysInMonth; day++) {
+    const thisDate = new Date(year, month, day);
+    const isFuture = thisDate > now;
+    const isToday = isCurrentMonth && day === todayDate;
+    const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const hasData = !!aquaData.analysisData[key];
+    let cls = 'analysis-cell';
+    if (isFuture) cls += ' future';
+    else if (hasData) cls += ' has-data';
+    if (isToday) cls += ' today';
+    const onclick = isFuture ? '' : ` onclick="openAnalysisModal('${key}',${day})"`;
+    html += `<div class="${cls}"${onclick}><span class="analysis-num">${day}</span></div>`;
+  }
+  document.getElementById('analysis-grid').innerHTML = html;
+}
+
+function shiftAnalysisMonth(delta) {
+  analysisMonthOffset = Math.min(0, analysisMonthOffset + delta);
+  renderAnalysisGrid();
+}
+
+function openAnalysisModal(key, day) {
+  analysisModalDateKey = key;
+  const [y,m,d2] = key.split('-');
+  const dateLabel = new Date(parseInt(y), parseInt(m)-1, parseInt(d2)).toLocaleDateString('it-IT', { day:'numeric', month:'long', year:'numeric' });
+  document.getElementById('analysis-modal-title').textContent = `🔬 Analisi – ${dateLabel}`;
+
+  const existing = aquaData.analysisData[key] || {};
+  document.getElementById('ap-ph').value = existing.ph ?? '';
+  document.getElementById('ap-nh3').value = existing.nh3 ?? '';
+  document.getElementById('ap-no2').value = existing.no2 ?? '';
+  document.getElementById('ap-no3').value = existing.no3 ?? '';
+
+  // summary
+  const sumEl = document.getElementById('analysis-summary');
+  if (existing.ph || existing.nh3 !== undefined) {
+    let lines = [];
+    if (existing.ph) lines.push(`pH: ${existing.ph}`);
+    if (existing.nh3 !== undefined && existing.nh3 !== '') lines.push(`Ammoniaca: ${existing.nh3} mg/L`);
+    if (existing.no2 !== undefined && existing.no2 !== '') lines.push(`Nitriti: ${existing.no2} mg/L`);
+    if (existing.no3 !== undefined && existing.no3 !== '') lines.push(`Nitrati: ${existing.no3} mg/L`);
+    sumEl.textContent = 'Dati precedenti: ' + lines.join(' · ');
+    sumEl.style.display = '';
+  } else {
+    sumEl.style.display = 'none';
+  }
+
+  ['ph','nh3','no2','no3'].forEach(p => updateParamStatus(p));
+  document.getElementById('analysis-overlay').classList.add('open');
+}
+function closeAnalysisModal() {
+  document.getElementById('analysis-overlay').classList.remove('open');
+  analysisModalDateKey = null;
+}
+
+function paramStatusClass(param, val) {
+  if (val === '' || val === null || isNaN(val)) return '';
+  const v = parseFloat(val);
+  if (param === 'ph') {
+    if (v >= 6.5 && v <= 7.5) return 'status-ok';
+    if (v >= 6.0 && v <= 8.0) return 'status-warn';
+    return 'status-danger';
+  }
+  if (param === 'nh3') {
+    if (v === 0) return 'status-ok';
+    if (v <= 0.25) return 'status-warn';
+    return 'status-danger';
+  }
+  if (param === 'no2') {
+    if (v === 0) return 'status-ok';
+    if (v <= 0.1) return 'status-warn';
+    return 'status-danger';
+  }
+  if (param === 'no3') {
+    if (v <= 20) return 'status-ok';
+    if (v <= 40) return 'status-warn';
+    return 'status-danger';
+  }
+  return '';
+}
+function paramStatusLabel(param, val) {
+  if (val === '' || val === null || isNaN(val)) return '';
+  const cls = paramStatusClass(param, val);
+  if (cls === 'status-ok') return '✓ OK';
+  if (cls === 'status-warn') return '⚠️';
+  if (cls === 'status-danger') return '⛔';
+  return '';
+}
+function updateParamStatus(param) {
+  const inputId = { ph:'ap-ph', nh3:'ap-nh3', no2:'ap-no2', no3:'ap-no3' }[param];
+  const statusId = { ph:'ps-ph', nh3:'ps-nh3', no2:'ps-no2', no3:'ps-no3' }[param];
+  const val = document.getElementById(inputId).value;
+  const statusEl = document.getElementById(statusId);
+  statusEl.className = 'param-status ' + paramStatusClass(param, val);
+  statusEl.textContent = paramStatusLabel(param, val);
+}
+
+function saveAnalysis() {
+  if (!analysisModalDateKey) return;
+  const ph = document.getElementById('ap-ph').value;
+  const nh3 = document.getElementById('ap-nh3').value;
+  const no2 = document.getElementById('ap-no2').value;
+  const no3 = document.getElementById('ap-no3').value;
+  if (ph==='' && nh3==='' && no2==='' && no3==='') {
+    delete aquaData.analysisData[analysisModalDateKey];
+  } else {
+    aquaData.analysisData[analysisModalDateKey] = {
+      ph: ph !== '' ? parseFloat(ph) : undefined,
+      nh3: nh3 !== '' ? parseFloat(nh3) : undefined,
+      no2: no2 !== '' ? parseFloat(no2) : undefined,
+      no3: no3 !== '' ? parseFloat(no3) : undefined,
+    };
+  }
+  aquaSave(); closeAnalysisModal(); renderAnalysisGrid();
+  showToast('🔬 Analisi salvata!');
+}
 </script>
 </body>
 </html>
