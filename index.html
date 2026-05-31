@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Home Nature">
+<meta name="apple-mobile-web-app-title" content="Il mio angolo verde">
 <meta name="theme-color" content="#f6faf0">
-<title>Home Nature</title>
+<title>Il mio angolo verde</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -620,7 +620,7 @@
 <!-- ═══════════════════ HOME ═══════════════════ -->
 <div id="home-screen">
   <div class="home-emoji">🌿</div>
-  <div class="home-title">Home Nature</div>
+  <div class="home-title">Il mio angolo verde</div>
   <div class="home-sub">Scegli cosa vuoi aggiornare</div>
   <div class="home-question">Cosa vuoi aggiornare?</div>
   <button class="home-btn home-btn-plants" onclick="showPlants()">
@@ -730,6 +730,10 @@
     </div>
     <div class="header-right">
       <button class="btn-back" onclick="goHome()">← Home</button>
+      <button class="btn-sync" id="btn-sync-aqua" onclick="openDrivePanel()">
+        <span class="sync-dot" id="sync-dot-aqua"></span>
+        <span id="sync-label-aqua">Drive</span>
+      </button>
     </div>
   </header>
   <main class="aqua-main">
@@ -1269,12 +1273,16 @@ function updateSyncUI() {
   const dot = document.getElementById('sync-dot');
   const lbl = document.getElementById('sync-label');
   const btn = document.getElementById('btn-sync');
-  if (!dot) return;
+  const dotA = document.getElementById('sync-dot-aqua');
+  const lblA = document.getElementById('sync-label-aqua');
+  const btnA = document.getElementById('btn-sync-aqua');
   if (accessToken && googleUser) {
-    dot.className = 'sync-dot on'; lbl.textContent = googleUser.name ? googleUser.name.split(' ')[0] : 'Drive';
-    btn.className = 'btn-sync connected';
+    const name = googleUser.name ? googleUser.name.split(' ')[0] : 'Drive';
+    if (dot) { dot.className = 'sync-dot on'; lbl.textContent = name; btn.className = 'btn-sync connected'; }
+    if (dotA) { dotA.className = 'sync-dot on'; lblA.textContent = name; btnA.className = 'btn-sync connected'; }
   } else {
-    dot.className = 'sync-dot'; lbl.textContent = 'Drive'; btn.className = 'btn-sync';
+    if (dot) { dot.className = 'sync-dot'; lbl.textContent = 'Drive'; btn.className = 'btn-sync'; }
+    if (dotA) { dotA.className = 'sync-dot'; lblA.textContent = 'Drive'; btnA.className = 'btn-sync'; }
   }
 }
 function openDrivePanel() {
@@ -1321,11 +1329,11 @@ function driveLogout() {
 async function driveUpload() {
   if (!accessToken) return; setSyncing(true); closeDrivePanel();
   try {
-    const data = JSON.stringify(plants);
+    const data = JSON.stringify({ plants, aquario: aquaData });
     if (!driveFileId) driveFileId = await findDriveFile();
     if (driveFileId) await updateDriveFile(driveFileId, data);
     else driveFileId = await createDriveFile(data);
-    showToast('☁️ Salvato su Drive!');
+    showToast('☁️ Piante e acquario salvati su Drive!');
   } catch(e) {
     if (e.status===401) { accessToken=null; updateSyncUI(); showToast('Sessione scaduta, riconnettiti'); }
     else showToast('Errore durante il salvataggio');
@@ -1339,7 +1347,15 @@ async function driveDownload() {
     if (!driveFileId) { showToast('Nessun backup trovato su Drive'); setSyncing(false); return; }
     const data = await readDriveFile(driveFileId);
     const imported = JSON.parse(data);
-    if (Array.isArray(imported)) { plants=imported; save(); render(); showToast(`📥 Caricate ${plants.length} piante`); }
+    // supporta sia il vecchio formato (array) che il nuovo (oggetto con plants+aquario)
+    if (Array.isArray(imported)) {
+      plants = imported; save(); render();
+      showToast(`📥 Caricate ${plants.length} piante`);
+    } else if (imported && imported.plants) {
+      plants = imported.plants; save(); render();
+      if (imported.aquario) { aquaData = imported.aquario; aquaSave(); }
+      showToast(`📥 Caricate ${plants.length} piante + dati acquario`);
+    }
   } catch(e) {
     if (e.status===401) { accessToken=null; updateSyncUI(); showToast('Sessione scaduta, riconnettiti'); }
     else showToast('Errore durante il caricamento');
@@ -1552,7 +1568,8 @@ function renderAnalysisGrid() {
     const isFuture = thisDate > now;
     const isToday = isCurrentMonth && day === todayDate;
     const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const hasData = !!aquaData.analysisData[key];
+    const entry = aquaData.analysisData[key];
+    const hasData = entry && Object.values(entry).some(v => v !== undefined && v !== null && v !== '');
     let cls = 'analysis-cell';
     if (isFuture) cls += ' future';
     else if (hasData) cls += ' has-data';
