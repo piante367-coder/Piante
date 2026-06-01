@@ -631,7 +631,7 @@
 </div>
 
 <!-- ═══════════════════ HOME ═══════════════════ -->
-<div id="home-screen">
+<div id="home-screen" style="display:none">
   <div class="home-emoji">🌿</div>
   <div class="home-title">Home Nature</div>
   <div class="home-sub" id="home-user-greeting">Scegli cosa vuoi aggiornare</div>
@@ -1552,6 +1552,21 @@ function gfetch(url, opts={}) {
   return fetch(url, opts);
 }
 window.addEventListener('load', () => {
+  // Carica i dati subito, senza aspettare Google
+  load();
+  // Mostra subito la schermata giusta
+  if (accessToken && googleUser) {
+    document.getElementById('home-screen').style.display = '';
+    document.getElementById('login-screen').style.display = 'none';
+    const name = googleUser.name ? googleUser.name.split(' ')[0] : '';
+    document.getElementById('home-user-greeting').textContent = name ? `Ciao, ${name}! 👋` : 'Scegli cosa vuoi aggiornare';
+  } else {
+    document.getElementById('home-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = '';
+  }
+  updateSyncUI();
+
+  // Inizializza Google in background (serve solo per login/upload/download)
   const interval = setInterval(() => {
     if (typeof google==='undefined' || !google.accounts) return;
     clearInterval(interval);
@@ -1568,30 +1583,17 @@ window.addEventListener('load', () => {
           localStorage.setItem('gd_user', JSON.stringify(googleUser));
         } catch(e) { googleUser = {}; }
         updateSyncUI(); showToast('✅ Connesso a Google Drive!');
-        // Se siamo sulla login screen, passa alla home
+        // Se siamo ancora sulla login screen, passa alla home
         if (document.getElementById('login-screen').style.display !== 'none') {
           document.getElementById('login-screen').style.display = 'none';
           document.getElementById('home-screen').style.display = '';
           const name = googleUser && googleUser.name ? googleUser.name.split(' ')[0] : '';
           document.getElementById('home-user-greeting').textContent = name ? `Ciao, ${name}! 👋` : 'Scegli cosa vuoi aggiornare';
-        } else {
-          updateSyncUI();
         }
         try { driveFileId = await findDriveFile(); } catch(e) {}
       }
     });
     if (accessToken) { updateSyncUI(); findDriveFile().then(id=>{driveFileId=id;}).catch(()=>{}); }
-    // Mostra login screen se non autenticato, altrimenti home
-    load();
-    if (accessToken && googleUser) {
-      document.getElementById('home-screen').style.display = '';
-      document.getElementById('login-screen').style.display = 'none';
-      const name = googleUser.name ? googleUser.name.split(' ')[0] : '';
-      document.getElementById('home-user-greeting').textContent = name ? `Ciao, ${name}! 👋` : 'Scegli cosa vuoi aggiornare';
-    } else {
-      document.getElementById('home-screen').style.display = 'none';
-      document.getElementById('login-screen').style.display = '';
-    }
   }, 200);
 });
 
