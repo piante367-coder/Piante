@@ -617,11 +617,24 @@
 </head>
 <body>
 
+<!-- ═══════════════════ LOGIN SCREEN ═══════════════════ -->
+<div id="login-screen" style="display:none">
+  <div class="home-emoji">🌿</div>
+  <div class="home-title">Home Nature</div>
+  <div class="home-sub">Il tuo angolo verde digitale</div>
+  <div class="home-question" style="margin-bottom:2rem">Accedi per iniziare</div>
+  <button class="home-btn home-btn-plants" id="login-google-btn" onclick="driveLoginFromHome()" style="gap:10px;max-width:320px">
+    <svg width="22" height="22" viewBox="0 0 24 24"><path fill="#fff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#fff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fff" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#fff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    Accedi con Google Drive
+  </button>
+  <p style="font-size:13px;color:var(--gray-400);margin-top:1rem;text-align:center;max-width:280px;line-height:1.6">I tuoi dati vengono salvati in modo sicuro su Google Drive</p>
+</div>
+
 <!-- ═══════════════════ HOME ═══════════════════ -->
 <div id="home-screen">
   <div class="home-emoji">🌿</div>
-  <div class="home-title">Il mio angolo verde</div>
-  <div class="home-sub">Scegli cosa vuoi aggiornare</div>
+  <div class="home-title">Home Nature</div>
+  <div class="home-sub" id="home-user-greeting">Scegli cosa vuoi aggiornare</div>
   <div class="home-question">Cosa vuoi aggiornare?</div>
   <button class="home-btn home-btn-plants" onclick="showPlants()">
     <span class="home-btn-icon">🪴</span> Le mie Piante
@@ -629,6 +642,7 @@
   <button class="home-btn home-btn-aquarium" onclick="showAquarium()">
     <span class="home-btn-icon">🐟</span> Il mio Acquario
   </button>
+  <button onclick="driveLogout()" style="margin-top:2rem;background:none;border:none;font-size:13px;color:var(--gray-400);cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline">Disconnetti account</button>
 </div>
 
 <!-- ═══════════════════ PIANTE ═══════════════════ -->
@@ -730,7 +744,7 @@
     </div>
     <div class="header-right">
       <button class="btn-back" onclick="goHome()">← Home</button>
-      <button class="btn-sync" id="btn-sync-aqua" onclick="openDrivePanel()">
+      <button class="btn-sync" id="btn-sync-aqua" onclick="openAquaDrivePanel()">
         <span class="sync-dot" id="sync-dot-aqua"></span>
         <span id="sync-label-aqua">Drive</span>
       </button>
@@ -743,6 +757,13 @@
     <button class="aqua-add-btn" onclick="openWaterChangeModal()">＋ Registra cambio d'acqua</button>
     <div class="aqua-card" id="wc-list-card" style="display:none">
       <div id="wc-list"></div>
+    </div>
+
+    <!-- PIANTE IN ACQUARIO -->
+    <div class="aqua-section-title">🌿 Le mie Piante in Acquario</div>
+    <button class="aqua-add-btn" onclick="openAquaPlantModal()">＋ Aggiungi pianta</button>
+    <div class="aqua-card" id="aqua-plant-list-card" style="display:none">
+      <div id="aqua-plant-list"></div>
     </div>
 
     <!-- FERTILIZZANTE -->
@@ -832,6 +853,42 @@
   </div>
 </div>
 
+<!-- Drive panel acquario -->
+<div class="overlay" id="aqua-drive-overlay" onclick="if(event.target===this)closeAquaDrivePanel()">
+  <div class="drive-panel">
+    <div class="modal-handle"></div>
+    <div id="aqua-drive-content"></div>
+  </div>
+</div>
+
+<!-- Modal Piante Acquario -->
+<div class="aqua-wc-overlay" id="aqua-plant-overlay" onclick="if(event.target===this)closeAquaPlantModal()">
+  <div class="aqua-wc-modal">
+    <div class="modal-handle"></div>
+    <h2 id="aqua-plant-modal-title">🌿 Pianta in acquario</h2>
+    <div class="form-group">
+      <label>Nome pianta</label>
+      <input type="text" id="ap-plant-name" placeholder="es. Anubias, Microsorum…" autocomplete="off" style="border-color:var(--blue-200)">
+    </div>
+    <div class="form-group">
+      <label>Specie (opzionale)</label>
+      <input type="text" id="ap-plant-species" placeholder="es. Anubias barteri" autocomplete="off" style="border-color:var(--blue-200)">
+    </div>
+    <div class="form-group">
+      <label>Data aggiunta (opzionale)</label>
+      <input type="date" id="ap-plant-date" style="border-color:var(--blue-200)">
+    </div>
+    <div class="form-group">
+      <label>Note (opzionale)</label>
+      <input type="text" id="ap-plant-note" placeholder="es. Posizione, substrato…" autocomplete="off" style="border-color:var(--blue-200)">
+    </div>
+    <div class="modal-actions" style="margin-top:1rem">
+      <button class="btn-cancel-modal" onclick="closeAquaPlantModal()">Annulla</button>
+      <button style="flex:1;padding:11px;border-radius:var(--radius-sm);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;background:var(--blue-600);color:#fff;border:none;transition:background 0.15s" onclick="saveAquaPlant()">Salva</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"><span id="toast-msg"></span></div>
 <div class="hm-tooltip" id="hm-tooltip" style="position:fixed;background:var(--gray-800);color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;pointer-events:none;z-index:200;white-space:nowrap;opacity:0;transition:opacity 0.1s;"></div>
 
@@ -840,13 +897,22 @@
 // NAVIGATION
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function goHome() {
-  document.getElementById('home-screen').style.display = '';
   document.getElementById('plants-screen').classList.remove('visible');
   document.getElementById('aquarium-screen').classList.remove('visible');
   document.body.style.background = 'var(--green-50)';
+  if (accessToken && googleUser) {
+    document.getElementById('home-screen').style.display = '';
+    document.getElementById('login-screen').style.display = 'none';
+    const name = googleUser.name ? googleUser.name.split(' ')[0] : '';
+    document.getElementById('home-user-greeting').textContent = name ? `Ciao, ${name}! 👋` : 'Scegli cosa vuoi aggiornare';
+  } else {
+    document.getElementById('home-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = '';
+  }
 }
 function showPlants() {
   document.getElementById('home-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'none';
   document.getElementById('plants-screen').classList.add('visible');
   document.getElementById('aquarium-screen').classList.remove('visible');
   document.body.style.background = 'var(--green-50)';
@@ -854,11 +920,13 @@ function showPlants() {
 }
 function showAquarium() {
   document.getElementById('home-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'none';
   document.getElementById('aquarium-screen').classList.add('visible');
   document.getElementById('plants-screen').classList.remove('visible');
   document.body.style.background = 'var(--blue-50)';
   aquaLoad();
   renderWaterChanges();
+  renderAquaPlants();
   renderFertAquaGrid();
   renderAnalysisGrid();
 }
@@ -1319,12 +1387,99 @@ function openDrivePanel() {
 }
 function closeDrivePanel() { document.getElementById('drive-overlay').classList.remove('open'); }
 function handleDriveOverlayClick(e) { if (e.target===document.getElementById('drive-overlay')) closeDrivePanel(); }
+function openAquaDrivePanel() {
+  const content = document.getElementById('aqua-drive-content');
+  if (accessToken && googleUser) {
+    const avatarHtml = googleUser.picture ? `<img src="${googleUser.picture}" alt="">` : `<span>${(googleUser.name||'?')[0]}</span>`;
+    content.innerHTML = `
+      <div class="drive-user">
+        <div class="drive-avatar">${avatarHtml}</div>
+        <div><div class="drive-name">${googleUser.name||'Utente Google'}</div><div class="drive-email">${googleUser.email||''}</div></div>
+      </div>
+      <div class="drive-actions">
+        <button class="btn-drive btn-drive-upload" onclick="driveUploadFromAqua()">☁️ Salva su Drive</button>
+        <p class="drive-hint">Sovrascrive il backup su Drive con i dati attuali.</p>
+        <div class="drive-sep"></div>
+        <button class="btn-drive btn-drive-download" onclick="driveDownloadFromAqua()">📥 Carica da Drive</button>
+        <p class="drive-hint">Sostituisce i dati attuali con quelli salvati su Drive.</p>
+        <div class="drive-sep"></div>
+        <button class="btn-drive btn-drive-logout" onclick="driveLogout()">Disconnetti account</button>
+      </div>`;
+  } else {
+    content.innerHTML = `
+      <h2 style="margin-bottom:0.75rem;color:var(--blue-800)">Sincronizza con Drive</h2>
+      <p style="font-size:14px;color:var(--gray-600);line-height:1.6;margin-bottom:1.25rem">Collegando il tuo Google Account puoi salvare i dati acquario su Drive.</p>
+      <div class="drive-actions">
+        <button class="btn-drive btn-drive-upload" onclick="driveLogin()" style="gap:10px;background:var(--blue-600)">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#fff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#fff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fff" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#fff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Accedi con Google
+        </button>
+        <p class="drive-hint">I tuoi dati vengono salvati in una cartella privata su Drive.</p>
+      </div>`;
+  }
+  document.getElementById('aqua-drive-overlay').classList.add('open');
+}
+function closeAquaDrivePanel() { document.getElementById('aqua-drive-overlay').classList.remove('open'); }
+async function driveUploadFromAqua() {
+  if (!accessToken) return;
+  const dot = document.getElementById('sync-dot-aqua');
+  const btn = document.getElementById('btn-sync-aqua');
+  dot.className = 'sync-dot spinning'; btn.classList.add('syncing');
+  closeAquaDrivePanel();
+  try {
+    const data = JSON.stringify({ plants, aquario: aquaData });
+    if (!driveFileId) driveFileId = await findDriveFile();
+    if (driveFileId) await updateDriveFile(driveFileId, data);
+    else driveFileId = await createDriveFile(data);
+    showToast('☁️ Dati acquario salvati su Drive!');
+  } catch(e) {
+    if (e.status===401) { accessToken=null; updateSyncUI(); showToast('Sessione scaduta, riconnettiti'); }
+    else showToast('Errore durante il salvataggio');
+  }
+  updateSyncUI(); btn.classList.remove('syncing');
+}
+async function driveDownloadFromAqua() {
+  if (!accessToken) return;
+  const dot = document.getElementById('sync-dot-aqua');
+  const btn = document.getElementById('btn-sync-aqua');
+  dot.className = 'sync-dot spinning'; btn.classList.add('syncing');
+  closeAquaDrivePanel();
+  try {
+    if (!driveFileId) driveFileId = await findDriveFile();
+    if (!driveFileId) { showToast('Nessun backup trovato su Drive'); updateSyncUI(); btn.classList.remove('syncing'); return; }
+    const data = await readDriveFile(driveFileId);
+    const imported = JSON.parse(data);
+    if (Array.isArray(imported)) {
+      plants = imported; save();
+      showToast('📥 Caricato backup (solo piante)');
+    } else if (imported && imported.plants) {
+      plants = imported.plants; save();
+      if (imported.aquario) { aquaData = imported.aquario; aquaSave(); renderWaterChanges(); renderAquaPlants(); renderFertAquaGrid(); renderAnalysisGrid(); }
+      showToast(`📥 Dati acquario + ${plants.length} piante caricati`);
+    }
+  } catch(e) {
+    if (e.status===401) { accessToken=null; updateSyncUI(); showToast('Sessione scaduta, riconnettiti'); }
+    else showToast('Errore durante il caricamento');
+  }
+  updateSyncUI(); btn.classList.remove('syncing');
+}
 function driveLogin() { if (!tokenClient) { showToast('⚠️ Google non ancora caricato'); return; } tokenClient.requestAccessToken({ prompt: 'consent' }); }
+function driveLoginFromHome() {
+  if (!tokenClient) { showToast('⚠️ Google non ancora caricato, riprova tra un secondo'); return; }
+  tokenClient.requestAccessToken({ prompt: 'consent' });
+}
 function driveLogout() {
   if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
   accessToken=null; googleUser=null; driveFileId=null;
   localStorage.removeItem('gd_token'); localStorage.removeItem('gd_user');
-  updateSyncUI(); closeDrivePanel(); showToast('Account disconnesso');
+  updateSyncUI(); closeDrivePanel(); closeAquaDrivePanel();
+  // Torna alla schermata di login
+  document.getElementById('plants-screen').classList.remove('visible');
+  document.getElementById('aquarium-screen').classList.remove('visible');
+  document.getElementById('home-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = '';
+  document.body.style.background = 'var(--green-50)';
+  showToast('Account disconnesso');
 }
 async function driveUpload() {
   if (!accessToken) return; setSyncing(true); closeDrivePanel();
@@ -1413,10 +1568,30 @@ window.addEventListener('load', () => {
           localStorage.setItem('gd_user', JSON.stringify(googleUser));
         } catch(e) { googleUser = {}; }
         updateSyncUI(); showToast('✅ Connesso a Google Drive!');
+        // Se siamo sulla login screen, passa alla home
+        if (document.getElementById('login-screen').style.display !== 'none') {
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('home-screen').style.display = '';
+          const name = googleUser && googleUser.name ? googleUser.name.split(' ')[0] : '';
+          document.getElementById('home-user-greeting').textContent = name ? `Ciao, ${name}! 👋` : 'Scegli cosa vuoi aggiornare';
+        } else {
+          updateSyncUI();
+        }
         try { driveFileId = await findDriveFile(); } catch(e) {}
       }
     });
     if (accessToken) { updateSyncUI(); findDriveFile().then(id=>{driveFileId=id;}).catch(()=>{}); }
+    // Mostra login screen se non autenticato, altrimenti home
+    load();
+    if (accessToken && googleUser) {
+      document.getElementById('home-screen').style.display = '';
+      document.getElementById('login-screen').style.display = 'none';
+      const name = googleUser.name ? googleUser.name.split(' ')[0] : '';
+      document.getElementById('home-user-greeting').textContent = name ? `Ciao, ${name}! 👋` : 'Scegli cosa vuoi aggiornare';
+    } else {
+      document.getElementById('home-screen').style.display = 'none';
+      document.getElementById('login-screen').style.display = '';
+    }
   }, 200);
 });
 
@@ -1424,14 +1599,15 @@ window.addEventListener('load', () => {
 // AQUARIUM CODE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const AQUA_KEY = 'acquario-v1';
-let aquaData = { waterChanges: [], fertData: {}, analysisData: {} };
+let aquaData = { waterChanges: [], fertData: {}, analysisData: {}, aquaPlants: [] };
 
 function aquaLoad() {
-  try { aquaData = JSON.parse(localStorage.getItem(AQUA_KEY)) || { waterChanges:[], fertData:{}, analysisData:{} }; }
-  catch(e) { aquaData = { waterChanges:[], fertData:{}, analysisData:{} }; }
+  try { aquaData = JSON.parse(localStorage.getItem(AQUA_KEY)) || { waterChanges:[], fertData:{}, analysisData:{}, aquaPlants:[] }; }
+  catch(e) { aquaData = { waterChanges:[], fertData:{}, analysisData:{}, aquaPlants:[] }; }
   if (!aquaData.waterChanges) aquaData.waterChanges = [];
   if (!aquaData.fertData) aquaData.fertData = {};
   if (!aquaData.analysisData) aquaData.analysisData = {};
+  if (!aquaData.aquaPlants) aquaData.aquaPlants = [];
 }
 function aquaSave() { localStorage.setItem(AQUA_KEY, JSON.stringify(aquaData)); }
 
@@ -1679,6 +1855,78 @@ function saveAnalysis() {
   }
   aquaSave(); closeAnalysisModal(); renderAnalysisGrid();
   showToast('🔬 Analisi salvata!');
+// ─── PIANTE IN ACQUARIO ───
+let editingAquaPlantId = null;
+
+function renderAquaPlants() {
+  const list = document.getElementById('aqua-plant-list');
+  const card = document.getElementById('aqua-plant-list-card');
+  const plants = aquaData.aquaPlants || [];
+  if (plants.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = '';
+  list.innerHTML = plants.map((p, i) => {
+    const dateHtml = p.date
+      ? `<div class="water-change-days">Aggiunta il ${new Date(p.date+'T12:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'})}</div>`
+      : '';
+    const noteHtml = p.note ? `<div style="font-size:12px;color:var(--gray-400);margin-top:2px">${p.note}</div>` : '';
+    const speciesHtml = p.species ? `<div style="font-size:12px;color:var(--gray-400);font-style:italic;margin-top:2px">${p.species}</div>` : '';
+    return `<div class="water-change-row">
+      <div>
+        <div class="water-change-date">🌿 ${p.name}</div>
+        ${speciesHtml}${noteHtml}${dateHtml}
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="btn-icon" onclick="editAquaPlant(${i})" style="color:var(--gray-300)">✏️</button>
+        <button class="btn-icon" onclick="deleteAquaPlant(${i})" style="color:var(--gray-300)">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openAquaPlantModal(idx) {
+  editingAquaPlantId = idx !== undefined ? idx : null;
+  if (idx !== undefined) {
+    const p = aquaData.aquaPlants[idx];
+    document.getElementById('aqua-plant-modal-title').textContent = '✏️ Modifica pianta';
+    document.getElementById('ap-plant-name').value = p.name || '';
+    document.getElementById('ap-plant-species').value = p.species || '';
+    document.getElementById('ap-plant-date').value = p.date || '';
+    document.getElementById('ap-plant-note').value = p.note || '';
+  } else {
+    document.getElementById('aqua-plant-modal-title').textContent = '🌿 Nuova pianta';
+    document.getElementById('ap-plant-name').value = '';
+    document.getElementById('ap-plant-species').value = '';
+    document.getElementById('ap-plant-date').value = '';
+    document.getElementById('ap-plant-note').value = '';
+  }
+  document.getElementById('aqua-plant-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('ap-plant-name').focus(), 100);
+}
+function closeAquaPlantModal() { document.getElementById('aqua-plant-overlay').classList.remove('open'); }
+function saveAquaPlant() {
+  const name = document.getElementById('ap-plant-name').value.trim();
+  if (!name) { document.getElementById('ap-plant-name').focus(); return; }
+  const entry = {
+    name,
+    species: document.getElementById('ap-plant-species').value.trim(),
+    date: document.getElementById('ap-plant-date').value,
+    note: document.getElementById('ap-plant-note').value.trim(),
+  };
+  if (!aquaData.aquaPlants) aquaData.aquaPlants = [];
+  if (editingAquaPlantId !== null) {
+    aquaData.aquaPlants[editingAquaPlantId] = entry;
+  } else {
+    aquaData.aquaPlants.push(entry);
+  }
+  aquaSave(); closeAquaPlantModal(); renderAquaPlants();
+  showToast(editingAquaPlantId !== null ? '🌿 Pianta aggiornata!' : '🌿 Pianta aggiunta!');
+}
+function editAquaPlant(idx) { openAquaPlantModal(idx); }
+function deleteAquaPlant(idx) {
+  const p = aquaData.aquaPlants[idx];
+  aquaData.aquaPlants.splice(idx, 1);
+  aquaSave(); renderAquaPlants();
+  showToast(`🌿 ${p.name} rimossa`);
 }
 </script>
 </body>
