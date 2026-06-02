@@ -835,6 +835,10 @@
       <span class="param-unit">mg/L</span>
       <span class="param-status" id="ps-no3"></span>
     </div>
+    <div class="form-group" style="margin-top:1rem">
+      <label style="font-size:13px;font-weight:500;color:var(--gray-600);display:block;margin-bottom:6px">Note (opzionale)</label>
+      <input type="text" id="ap-analysis-note" placeholder="es. Dopo cambio acqua, aggiunto fertilizzante…" autocomplete="off" style="width:100%;padding:10px 12px;border:1.5px solid var(--blue-200);border-radius:var(--radius-sm);font-size:15px;font-family:'DM Sans',sans-serif;background:#fff;color:var(--gray-800)">
+    </div>
     <button class="btn-save-aqua" onclick="saveAnalysis()">Salva analisi</button>
     <button class="btn-cancel-aqua" onclick="closeAnalysisModal()">Annulla</button>
   </div>
@@ -925,7 +929,9 @@ function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(plants)); }
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,5); }
 function daysSince(iso) {
   if (!iso) return null;
-  return Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const d = new Date(iso); d.setHours(0,0,0,0);
+  return Math.floor((today - d) / 86400000);
 }
 function formatDate(iso) {
   if (!iso) return null;
@@ -1607,7 +1613,7 @@ function renderAnalysisGrid() {
     const isToday = isCurrentMonth && day === todayDate;
     const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const entry = aquaData.analysisData[key];
-    const hasData = entry && Object.values(entry).some(v => v !== undefined && v !== null && v !== '');
+    const hasData = entry && (Object.values(entry).some(v => v !== undefined && v !== null && v !== '') );
     let cls = 'analysis-cell';
     if (isFuture) cls += ' future';
     else if (hasData) cls += ' has-data';
@@ -1634,15 +1640,17 @@ function openAnalysisModal(key, day) {
   document.getElementById('ap-nh3').value = existing.nh3 ?? '';
   document.getElementById('ap-no2').value = existing.no2 ?? '';
   document.getElementById('ap-no3').value = existing.no3 ?? '';
+  document.getElementById('ap-analysis-note').value = existing.note ?? '';
 
   // summary
   const sumEl = document.getElementById('analysis-summary');
-  if (existing.ph || existing.nh3 !== undefined) {
+  if (existing.ph || existing.nh3 !== undefined || existing.note) {
     let lines = [];
     if (existing.ph) lines.push(`pH: ${existing.ph}`);
     if (existing.nh3 !== undefined && existing.nh3 !== '') lines.push(`Ammoniaca: ${existing.nh3} mg/L`);
     if (existing.no2 !== undefined && existing.no2 !== '') lines.push(`Nitriti: ${existing.no2} mg/L`);
     if (existing.no3 !== undefined && existing.no3 !== '') lines.push(`Nitrati: ${existing.no3} mg/L`);
+    if (existing.note) lines.push(`📝 ${existing.note}`);
     sumEl.textContent = 'Dati precedenti: ' + lines.join(' · ');
     sumEl.style.display = '';
   } else {
@@ -1705,7 +1713,8 @@ function saveAnalysis() {
   const nh3 = document.getElementById('ap-nh3').value;
   const no2 = document.getElementById('ap-no2').value;
   const no3 = document.getElementById('ap-no3').value;
-  if (ph==='' && nh3==='' && no2==='' && no3==='') {
+  const note = document.getElementById('ap-analysis-note').value.trim();
+  if (ph==='' && nh3==='' && no2==='' && no3==='' && !note) {
     delete aquaData.analysisData[analysisModalDateKey];
   } else {
     aquaData.analysisData[analysisModalDateKey] = {
@@ -1713,6 +1722,7 @@ function saveAnalysis() {
       nh3: nh3 !== '' ? parseFloat(nh3) : undefined,
       no2: no2 !== '' ? parseFloat(no2) : undefined,
       no3: no3 !== '' ? parseFloat(no3) : undefined,
+      note: note || undefined,
     };
   }
   aquaSave(); closeAnalysisModal(); renderAnalysisGrid();
